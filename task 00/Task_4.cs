@@ -61,17 +61,24 @@ namespace xt_net_web_hw
 
             return res;
         }
-
+        
         private static void print_array(int[][] a)
         {
+            Console.Write("{");
             for (int i = 0; i < a.Length; i++)
             {
-                for (int j = 0; j < a[i].Length; j++)
+                Console.Write("{");
+
+                for (int j = 0; j < a[i].Length - 1; j++)
                 {
-                    Console.Write($"{a[i][j], 3} ");
+                    Console.Write($"{a[i][j], 3}, ");
                 }
-                Console.WriteLine();
+                Console.Write($"{a[i][a[i].Length - 1], 3}");
+
+                Console.Write("}, ");
             }
+
+            Console.Write("}");
         }
 
         private static int get_element(int[][] a, int index)
