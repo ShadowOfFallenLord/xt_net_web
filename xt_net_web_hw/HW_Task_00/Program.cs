@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace xt_net_web_hw
+namespace HW_Task_00
 {
     class Program
     {
@@ -24,8 +25,6 @@ namespace xt_net_web_hw
             Console.WriteLine("Task 4");
             Task_4.Task();
             Console.Clear();
-
-            //Console.ReadKey();
         }
     }
 }

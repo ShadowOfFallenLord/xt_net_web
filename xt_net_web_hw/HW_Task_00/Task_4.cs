@@ -4,36 +4,48 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace xt_net_web_hw
+namespace HW_Task_00
 {
     static class Task_4
     {
-        private static int input()
+        private static bool CheckOnNumber(string input, out int res)
+        {
+            if (!int.TryParse(input, out res))
+            {
+                res = 0;
+                Console.WriteLine(" Error!");
+                Console.WriteLine($" \"{input}\" is not integer.");
+                Console.WriteLine(" Repeat input please.");
+                return false;
+            }
+            return true;
+        }
+
+        private static bool CheckOnPositive(int num)
+        {
+            if (num > 0) return true;
+
+            Console.WriteLine(" Error!");
+            Console.WriteLine($" {num} is not positive.");
+            Console.WriteLine(" Repeat input please.");
+
+            return false;
+        }
+
+        private static int Input()
         {
             string input;
             int res;
             Console.WriteLine(" Enter positive integer:");
 
-            for (; ; )
+            while(true)
             {
                 Console.Write("> ");
                 input = Console.ReadLine();
 
-                if (!int.TryParse(input, out res))
-                {
-                    Console.WriteLine(" Error!");
-                    Console.WriteLine($" \"{input}\" is not integer.");
-                    Console.WriteLine(" Repeat input please.");
-                    continue;
-                }
+                if (!CheckOnNumber(input, out res)) continue;
 
-                if (res <= 0)
-                {
-                    Console.WriteLine(" Error!");
-                    Console.WriteLine($" {res} is not positive.");
-                    Console.WriteLine(" Repeat input please.");
-                    continue;
-                }
+                if (!CheckOnPositive(res)) continue;
 
                 break;
             }
@@ -41,7 +53,7 @@ namespace xt_net_web_hw
             return res;
         }
 
-        private static int[][] init_array(int n)
+        private static int[][] InitArray(int n)
         {
             int[][] res = new int[n][];
             Random random = new Random();
@@ -51,7 +63,7 @@ namespace xt_net_web_hw
             for (int i = 0; i < n; i++)
             {
                 Console.WriteLine($"Enter length of {i} array:");
-                res[i] = new int[input()];
+                res[i] = new int[Input()];
 
                 for (int j = 0; j < res[i].Length; j++)
                 {
@@ -61,8 +73,20 @@ namespace xt_net_web_hw
 
             return res;
         }
-        
-        private static void print_array(int[][] a)
+
+        private static void PrintArrayLineByLine(int[][] a)
+        {
+            for (int i = 0; i < a.Length; i++)
+            {
+                for (int j = 0; j < a[i].Length; j++)
+                {
+                    Console.Write($"{a[i][j],3} ");
+                }
+                Console.WriteLine();
+            }
+        }
+
+        private static void PrintArray(int[][] a)
         {
             Console.Write("{");
             for (int i = 0; i < a.Length; i++)
@@ -81,7 +105,7 @@ namespace xt_net_web_hw
             Console.Write("}");
         }
 
-        private static int get_element(int[][] a, int index)
+        private static int GetElement(int[][] a, int index)
         {
             if (a == null)
             {
@@ -102,7 +126,7 @@ namespace xt_net_web_hw
             throw new IndexOutOfRangeException();
         }
 
-        private static int get_length(int[][] a)
+        private static int GetLength(int[][] a)
         {
             int res = 0;
 
@@ -114,14 +138,14 @@ namespace xt_net_web_hw
             return res;
         }
 
-        private static void swap_element(int[][] a, int index1, int index2)
+        private static void SwapElement(int[][] a, int index1, int index2)
         {
             if (a == null)
             {
                 throw new ArgumentNullException("Array was not initialized.");
             }
 
-            int l = get_length(a);
+            int l = GetLength(a);
 
             if (index1 < 0 || index1 >= l)
             {
@@ -179,7 +203,7 @@ namespace xt_net_web_hw
             a[i2_1][i2_2] = t;
         }
 
-        private static void sort_array(int[][] a)
+        private static void SortArray(int[][] a)
         {
             for (int i = 0; i < a.Length - 1; i++)
             {
@@ -198,16 +222,16 @@ namespace xt_net_web_hw
                 a[new_index] = t;
             }
 
-            int l = get_length(a);
+            int l = GetLength(a);
 
             for (int i = 0; i < l - 1; i++)
             {
                 int new_index = i;
-                int new_index_elem = get_element(a, new_index);
+                int new_index_elem = GetElement(a, new_index);
 
                 for (int j = i + 1; j < l; j++)
                 {
-                    int j_element = get_element(a, j);
+                    int j_element = GetElement(a, j);
                     if (j_element < new_index_elem)
                     {
                         new_index = j;
@@ -215,22 +239,22 @@ namespace xt_net_web_hw
                     }
                 }
 
-                swap_element(a, i, new_index);
+                SwapElement(a, i, new_index);
             }
         }
 
         public static void Task()
         {
-            int n = input();
+            int n = Input();
 
-            int[][] a = init_array(n);
+            int[][] a = InitArray(n);
             Console.WriteLine("Array:");
-            print_array(a);
+            PrintArray(a);
             Console.WriteLine();
 
-            sort_array(a);
+            SortArray(a);
             Console.WriteLine("Sorted array:");
-            print_array(a);
+            PrintArray(a);
 
             Console.WriteLine("\n Press any key to continue...");
             Console.ReadKey();
