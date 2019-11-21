@@ -8,6 +8,7 @@ namespace HW_Task_01
 {
     class Task_1_6
     {
+        [Flags]
         enum Styles : byte
         {
             None = 0,
@@ -37,54 +38,12 @@ namespace HW_Task_01
 
             public void SwichStyle(Styles style)
             {
-                if (CheckStyle(style))
-                {
-                    ClearStyle(style);
-                }
-                else
-                {
-                    SetStyle(style);
-                }
+                this.style ^= (byte)style;
             }
 
             public void Print()
             {
-                Console.Write("Parameter: ");
-
-                if (style == (byte)Styles.None)
-                {
-                    Console.WriteLine(Styles.None);
-                    return;
-                }
-
-                bool is_first = true;
-
-                if ((style & (byte)Styles.Bold) != 0)
-                {
-                    Console.Write(Styles.Bold);
-                    is_first = false;
-                }
-
-                if ((style & (byte)Styles.Italic) != 0)
-                {
-                    if (!is_first)
-                    {
-                        Console.Write(", ");
-                    }
-                    Console.Write(Styles.Italic);
-                    is_first = false;
-                }
-
-                if ((style & (byte)Styles.Underline) != 0)
-                {
-                    if (!is_first)
-                    {
-                        Console.Write(", ");
-                    }
-                    Console.Write(Styles.Underline);
-                    is_first = false;
-                }
-                Console.WriteLine();
+                Console.WriteLine($"Parameter: {(Styles)style}");
             }
         }
 

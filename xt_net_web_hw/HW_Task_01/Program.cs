@@ -31,7 +31,23 @@ namespace HW_Task_01
             Console.Clear();
 
             Console.WriteLine("Task 1.6");
-            Task_1_6.Task();
+            //Task_1_6.Task();
+            Console.Clear();
+
+            Console.WriteLine("Task 1.7");
+            //Task_1_7.Task();
+            Console.Clear();
+
+            Console.WriteLine("Task 1.8");
+            //Task_1_8.Task();
+            Console.Clear();
+
+            Console.WriteLine("Task 1.9");
+            //Task_1_9.Task();
+            Console.Clear();
+
+            Console.WriteLine("Task 1.10");
+            Task_1_10.Task();
             Console.Clear();
         }
     }
