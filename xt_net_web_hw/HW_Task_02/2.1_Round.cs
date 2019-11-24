@@ -12,8 +12,8 @@ namespace HW_Task_02
         public int Y { get; private set; }
         public int Radius { get; private set; }
 
-        public double Length { get; private set; }
-        public double Area { get; private set; }
+        public double Length { get; protected set; }
+        public double Area { get; protected set; }
 
         public Round(int x, int y, int r)
         {

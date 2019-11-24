@@ -15,7 +15,8 @@ namespace HW_Task_02
         public DateTime Birth { get; private set; }
         public int Age { get; private set; }
 
-        public User(string name, string last_name, string fathe_name, DateTime birth, int age)
+        public User(string name, string last_name, 
+            string fathe_name, DateTime birth, int age)
         {
             Name = name;
             LastName = last_name;

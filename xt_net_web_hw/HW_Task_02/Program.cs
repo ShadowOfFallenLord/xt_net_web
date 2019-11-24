@@ -72,12 +72,38 @@ namespace HW_Task_02
             Console.WriteLine();
         }
 
+        static void CheckEmployee()
+        {
+            Console.WriteLine("Task 2.5");
+            Employee user = new Employee("a", "b", "c", new DateTime(1, 2, 3), 666, "c", 5);
+            Console.WriteLine($" Name: {user.Name}");
+            Console.WriteLine($"LName: {user.LastName}");
+            Console.WriteLine($"FName: {user.FatherName}");
+            Console.WriteLine($"Birth: {user.Birth:d}");
+            Console.WriteLine($" Age : {user.Age}");
+            Console.WriteLine($"Post : {user.Post}");
+            Console.WriteLine($" Exp : {user.Experience}");
+            Console.WriteLine();
+        }
+
+        static void CheckRing()
+        {
+            Console.WriteLine("Task 2.6");
+            Ring ring = new Ring(1, 2, 2, 3);
+            Console.WriteLine($"({ring.X}, {ring.Y}), {ring.Radius}, {ring.InnerRadius}");
+            Console.WriteLine($"Length: {ring.Length}");
+            Console.WriteLine($"Area: {ring.Area}");
+            Console.WriteLine();
+        }
+
         static void Main(string[] args)
         {
-            CheckRound();
-            CheckTriangle();
-            CheckUser();
-            CheckString();
+            //CheckRound();
+            //CheckTriangle();
+            //CheckUser();
+            //CheckString();
+            //CheckEmployee();
+            CheckRing();
 
             Console.WriteLine("\n Press any key to continue...");
             Console.ReadKey();
