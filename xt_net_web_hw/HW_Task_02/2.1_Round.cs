@@ -24,7 +24,7 @@ namespace HW_Task_02
             Radius = r;
 
             Length = 2 * Math.PI * Radius;
-            Area = Math.PI * Math.PI * Radius;
+            Area = Math.PI * Radius * Radius;
         }
     }
 }

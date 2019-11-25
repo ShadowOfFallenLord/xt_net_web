@@ -22,7 +22,7 @@ namespace HW_Task_02
             InnerRadius = inner_radius;
 
             Length = Length + 2 * Math.PI * InnerRadius;
-            Area = Area - Math.PI * Math.PI * InnerRadius;
+            Area = Area - Math.PI * InnerRadius * InnerRadius;
         }
     }
 }
