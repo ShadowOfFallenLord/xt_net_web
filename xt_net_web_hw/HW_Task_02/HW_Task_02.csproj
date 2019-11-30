@@ -50,10 +50,21 @@
     <Compile Include="2.2_Triangle.cs" />
     <Compile Include="2.3_User.cs" />
     <Compile Include="2.6_Ring.cs" />
+    <Compile Include="task_2_7\Base\Color.cs" />
+    <Compile Include="task_2_7\Base\Figure.cs" />
+    <Compile Include="task_2_7\Core.cs" />
+    <Compile Include="task_2_7\Figures\Circle.cs" />
+    <Compile Include="task_2_7\Figures\Line.cs" />
+    <Compile Include="task_2_7\Base\Point.cs" />
+    <Compile Include="task_2_7\Figures\Rectangle.cs" />
+    <Compile Include="task_2_7\Figures\Ring.cs" />
+    <Compile Include="task_2_7\Figures\Round.cs" />
+    <Compile Include="task_2_7\UICore.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="2.4_MyString.cs" />
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

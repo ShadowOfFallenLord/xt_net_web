@@ -103,7 +103,8 @@ namespace HW_Task_02
             //CheckUser();
             //CheckString();
             //CheckEmployee();
-            CheckRing();
+            //CheckRing();
+            task_2_7.UICore.Instance.Start();
 
             Console.WriteLine("\n Press any key to continue...");
             Console.ReadKey();
