@@ -105,6 +105,7 @@ namespace HW_Task_02
             //CheckEmployee();
             //CheckRing();
             task_2_7.UICore.Instance.Start();
+            // have not check of work for 2.8
 
             Console.WriteLine("\n Press any key to continue...");
             Console.ReadKey();

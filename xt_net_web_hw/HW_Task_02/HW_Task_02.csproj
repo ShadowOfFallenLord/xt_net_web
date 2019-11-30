@@ -60,6 +60,25 @@
     <Compile Include="task_2_7\Figures\Ring.cs" />
     <Compile Include="task_2_7\Figures\Round.cs" />
     <Compile Include="task_2_7\UICore.cs" />
+    <Compile Include="task_2_8\EnemyKeeper.cs" />
+    <Compile Include="task_2_8\Essenses\Enemies\BearEnemy.cs" />
+    <Compile Include="task_2_8\Essenses\Enemies\BaseEnemy.cs" />
+    <Compile Include="task_2_8\Essenses\BaseEssense.cs" />
+    <Compile Include="task_2_8\Cells\Bonus\AppleBonus.cs" />
+    <Compile Include="task_2_8\Cells\Bonus\BaseBonus.cs" />
+    <Compile Include="task_2_8\Cells\Cell.cs" />
+    <Compile Include="task_2_8\Cells\Bonus\CherryBonus.cs" />
+    <Compile Include="task_2_8\Enums.cs" />
+    <Compile Include="task_2_8\GameCore.cs" />
+    <Compile Include="task_2_8\Cells\ICellContent.cs" />
+    <Compile Include="task_2_8\Cells\VoidCell.cs" />
+    <Compile Include="task_2_8\Cells\Walls\BaseWallCell.cs" />
+    <Compile Include="task_2_8\Cells\Walls\StoneWall.cs" />
+    <Compile Include="task_2_8\Cells\Walls\WoodWall.cs" />
+    <Compile Include="task_2_8\Essenses\Enemies\WolfEnemy.cs" />
+    <Compile Include="task_2_8\Essenses\Player.cs" />
+    <Compile Include="task_2_8\GameField.cs" />
+    <Compile Include="task_2_8\Cells\PortalCell.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="2.4_MyString.cs" />
