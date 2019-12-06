@@ -13,16 +13,15 @@ namespace HW_Task_03
         protected T[] content;
         protected int size;
 
-        public DynamicArray()
-        {
-            content = new T[default_capacity];
-            size = 0;
-        }
-
         public DynamicArray(int capacity)
         {
             content = new T[capacity];
             size = 0;
+        }
+
+        public DynamicArray() : this(default_capacity)
+        {
+            //
         }
 
         public DynamicArray(IEnumerable<T> list)
@@ -43,7 +42,7 @@ namespace HW_Task_03
             }
         }
 
-        protected void UpdateCapacity(int capacity)
+        protected virtual void UpdateCapacity(int capacity)
         {
             if(capacity < 0)
             {
@@ -177,7 +176,7 @@ namespace HW_Task_03
             } 
         }
 
-        public IEnumerator<T> GetEnumerator()
+        public virtual IEnumerator<T> GetEnumerator()
         {
             return new Enumerator(this);
         }
@@ -187,7 +186,7 @@ namespace HW_Task_03
             return new Enumerator(this);
         }
 
-        public T this[int index]
+        public virtual T this[int index]
         {
             get
             {
