@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace HW_Task_04
 {
-    class Task_1_2
+    class Task_1
     {
-        static void PrintArray<T>(IEnumerable<T> list)
+        public static void PrintArray<T>(IEnumerable<T> list)
         {
             foreach (T i in list)
             {
@@ -20,10 +20,10 @@ namespace HW_Task_04
         public static void SortArray<T>(T[] array, Func<T, T, bool> is_less)
         {
             int l = array.Length;
-            for(int i = 1, j = 0; i < l; i++)
+            for (int i = 1, j = 0; i < l; i++)
             {
                 j = i;
-                while(j > 0 && is_less(array[j], array[j - 1]))
+                while (j > 0 && is_less(array[j], array[j - 1]))
                 {
                     T t = array[j];
                     array[j] = array[j - 1];
@@ -32,21 +32,5 @@ namespace HW_Task_04
                 }
             }
         }
-
-        public static void Task()
-        {
-            string[] a = new string[] {
-                "aaaaa",
-                "a",
-                "aaaa",
-                "aa",
-                "aaa", };
-
-            PrintArray(a);
-
-            SortArray(a, (x, y) => (x.Length < y.Length));
-
-            PrintArray(a);
-        }
-    }
+    }    
 }

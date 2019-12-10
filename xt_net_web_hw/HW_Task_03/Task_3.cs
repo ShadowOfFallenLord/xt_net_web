@@ -26,6 +26,11 @@ namespace HW_Task_03
 
         public DynamicArray(IEnumerable<T> list)
         {
+            if(list == null)
+            {
+                throw new ArgumentNullException("list");
+            }
+
             int count = 0;
             foreach (T i in list)
             {
