@@ -11,7 +11,10 @@ namespace HW_Task_04
         static void Main(string[] args)
         {
             //Task_2.Task();
-            Task_3.Task();
+            //Task_3.Task();
+            //Task_4.Task();
+            //Task_5.Task();
+            Task_6.Task();
 
             Console.WriteLine("\n Press any key to continue...");
             Console.ReadKey();
