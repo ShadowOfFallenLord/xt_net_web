@@ -13,13 +13,13 @@ namespace Task_6.DAL.Awards
 
         public AwardKeeper()
         {
-            regex = new Regex(@"<{.+}>");
+            regex = new Regex(@"<{[^<{}>]+}>");
             awards = new List<IAward>();
         }
 
         public AwardKeeper(string input)
         {
-            regex = new Regex(@"<{.+}>");
+            regex = new Regex(@"<{[^<{}>]+}>");
             Init(input);
         }
 

@@ -17,9 +17,9 @@ namespace Task_6.DAL.Users
 
         public UserParser()
         {
-            record_regex = new Regex("<<.+>>");
-            awards_regex = new Regex("{.+}");
-            fields_regex = new Regex("\".+\"");
+            record_regex = new Regex("<<[^<>]+>>");
+            awards_regex = new Regex("{[^{}]+}");
+            fields_regex = new Regex("\"[^\"]+\"");
         }
 
         public User Parse(string input, IAwardKeeper award_keeper)

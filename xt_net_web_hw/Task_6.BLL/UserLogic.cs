@@ -12,18 +12,18 @@ namespace Task_6.BLL
 {
     public class UserLogic
     {
-        private string data_base_file;
         private DataBase data_base;
+        public string DataBaseFile { get; private set; }
         public InitErrors InitError { get; private set; }
 
         public UserLogic()
         {
-            data_base_file = Environment.CurrentDirectory + "\\data.base";
+            DataBaseFile = Environment.CurrentDirectory + "\\data.base";
             InitError = InitErrors.None;
 
             try
             {
-                data_base = new DataBase(data_base_file);
+                data_base = new DataBase(DataBaseFile);
             }
             catch(FileNotFoundException)
             {
@@ -92,6 +92,16 @@ namespace Task_6.BLL
             return data_base
                 .UserDataBase[user_id]
                 .Awards.Remove(award_id);
+        }
+
+        public IAward[] GetAllAwards()
+        {
+            return data_base.AwardKeeper.GetAwardsList();
+        }
+
+        public bool Save()
+        {
+            return data_base.Save(DataBaseFile);
         }
     }
 }

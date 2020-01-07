@@ -49,6 +49,10 @@
       <Project>{b26f63ef-0b84-4259-a2d4-892e778399ed}</Project>
       <Name>Task_6.BLL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Task_6.Interfaces\Task_6.Interfaces.csproj">
+      <Project>{07AEADF5-1C02-41EA-ADC8-D8AE3A1B4DA6}</Project>
+      <Name>Task_6.Interfaces</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

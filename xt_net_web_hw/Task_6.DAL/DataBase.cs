@@ -51,7 +51,10 @@ namespace Task_6.DAL
             {
                 file.Write(AwardKeeper.ToString());
                 file.Write('\0');
-                file.Write(UserDataBase.ToString());
+                foreach (IUser user in UserDataBase)
+                {
+                    file.Write(user.ToString());
+                }
             }
             return true;
         }
