@@ -13,7 +13,7 @@ namespace HW_Task_7
             //Task_1.Task();
             //Task_2.Task();
             //Task_3.Task();
-            Task_4.Task();
+            //Task_4.Task();
             //Task_5.Task();
 
             Console.WriteLine("Press any key...");
