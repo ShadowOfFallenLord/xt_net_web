@@ -1,0 +1,134 @@
+﻿<!DOCTYPE html>
+
+<html lang="ru" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Task 8.3</title>
+</head>
+<body>
+    <style>
+        body {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        * {
+            z-index: 1;
+        }
+
+        .menu_div {
+            position: absolute;
+            display: inline-block;
+            cursor: pointer;
+        }
+    </style>
+    <style>
+        .menu_head_shadow {
+            display: none;
+            position: absolute;
+            padding: 5px;
+            box-shadow: 0 0 5px 1px gray;
+            border-radius: 5px 5px 0 0;
+            z-index: 0;
+        }
+
+        .menu_div:hover > .menu_head_shadow {
+            display: block;
+        }
+    </style>
+    <style>
+        .menu_head {
+            position: absolute;
+            padding: 5px;
+            color: blue;
+            text-decoration: underline;
+            margin-bottom: 0px;
+        }
+
+        .menu_div:hover > .menu_head {
+            color: black;
+            text-decoration: none;
+            background-color: white;
+            border-radius: 5px 5px 0 0;
+        }
+    </style>
+    <style>
+        .menu_items_list {
+            position: absolute;
+            top: 28px;
+            width: 100px;
+            padding: 3px;
+            background-color: white;
+            box-shadow: 0 0 5px 1px gray;
+            display: none;
+            z-index: 0;
+        }
+
+        .menu_div:hover > .menu_items_list {
+            display: block;
+        }
+    </style>
+    <style>
+        .menu_item {
+            color: blue;
+            background-color: white;
+            padding: 4px;
+            z-index: 2;
+        }
+
+            .menu_item:hover {
+                color: white;
+                background-color: #37ABFF;
+            }
+    </style>
+
+    <div id="file_menu" class="menu_div">
+        <div class="menu_head_shadow">
+            Файл
+        </div>
+        <div class="menu_head">
+            Файл
+        </div>
+        <div class="menu_items_list">
+            <div class="menu_item">
+                Новый
+            </div>
+            <div class="menu_item">
+                Открыть
+            </div>
+            <div class="menu_item">
+                Сохранить
+            </div>
+            <div class="menu_item">
+                Закрыть
+            </div>
+        </div>
+    </div>
+
+    <div id="file_menu" class="menu_div" style="left:60px">
+        <div class="menu_head_shadow">
+            Правка
+        </div>
+        <div class="menu_head">
+            Правка
+        </div>
+        <div class="menu_items_list">
+            <div class="menu_item">
+                Вырезать
+            </div>
+            <div class="menu_item">
+                Копировать
+            </div>
+            <div class="menu_item">
+                Вставить
+            </div>
+            <div class="menu_item">
+                Удалить
+            </div>
+        </div>
+    </div>
+</body>
+</html>

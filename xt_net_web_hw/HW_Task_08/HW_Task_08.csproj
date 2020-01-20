@@ -38,6 +38,8 @@
   <ItemGroup>
     <Content Include="Task_1.html" />
     <Content Include="Task_2.html" />
+    <Content Include="Task_3.html" />
+    <Content Include="Task_4.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

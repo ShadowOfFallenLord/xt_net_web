@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <title>Task 8.4</title>
+</head>
+<body>
+    <style>
+        body
+        {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #333333;
+        }
+
+        .inside_color
+        {
+            background-color: #88B7D5;
+        }
+
+        .outside_color
+        {
+            background-color: #CAEBFF;
+        }
+
+        .horizontal_line
+        {
+            width: 100%;
+        }
+
+        .horizontal_center
+        {
+            margin: auto; 
+            width: 70px;
+        }
+
+        .outside_pointer 
+        {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            transform: rotate(45deg);
+            top: -30px;
+        }
+
+        .inside_pointer
+        {
+            position: absolute;
+            top: 5px;
+            bottom: 5px;
+            right: 5px;
+            left: 5px;
+        }
+
+        .outside_bread
+        {
+            position: absolute;
+            top: 60px;
+            left: 10px;
+            right: 10px;
+            height: 60px;
+        }
+
+        .inside_bread
+        {
+            position: absolute;
+            top: 5px;
+            bottom: 5px;
+            left: 5px;
+            right: 5px;
+        }
+
+        .bread_center
+        {
+            margin: auto; 
+            width: 241px;
+        }
+
+        .bread_text
+        {      
+            position: absolute;
+            top: 15px;
+            text-align: center;
+            color: white;
+            font-size: 14pt;
+        }
+    </style>
+    
+    <div class="outside_bread outside_color">
+        <div class="horizontal_center">
+            <div class="outside_pointer outside_color">
+                <div class="inside_pointer inside_color">
+                    <!-- void -->
+                </div>
+            </div>
+        </div>
+        <div class="inside_bread inside_color">
+            <div class="bread_center">
+                <div class="bread_text">
+                    Дистанция огромного размера
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
