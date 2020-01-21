@@ -1,0 +1,158 @@
+﻿<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <title>Task 8.5</title>
+</head>
+<body>
+    <style>
+        body 
+        {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #4E6379
+        }
+
+        .container
+        {
+            box-sizing: content-box;
+            width: 540px;
+            height: 135px;
+            margin: auto;
+            position: relative;
+            background-color: white;
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 20px 40px -10px black;
+        }
+
+        .inner_container
+        {
+            box-sizing: border-box;
+            float: left;
+            position: relative;
+            height: 135px;
+            width: 180px;
+            text-align: center;
+        }
+
+        .side_borders
+        {
+            border-right: solid 1px gray;
+            border-left: solid 1px gray;
+        }
+    </style>
+    <style>
+        .picture1 
+        {
+            margin: auto;
+            width: 60px;
+            height: 41px;
+            background-image: url(pic.png);
+            background-size: 60px;
+            background-repeat: no-repeat;
+        }
+
+        .picture2 
+        {
+            margin: auto;
+            width: 60px;
+            height: 41px;
+            background-image: url(pic.png);
+            background-size: 60px;
+            background-repeat: no-repeat;
+            background-position: 0px -42px;
+        }
+
+        .picture3 
+        {
+            margin: auto;
+            width: 60px;
+            height: 41px;
+            background-image: url(pic.png);
+            background-size: 60px;
+            background-repeat: no-repeat;
+            background-position: 0px -84px;
+        }
+    </style>
+    <style>
+        .text_title
+        {      
+            font-family: Arial, Helvetica, sans-serif;     
+            font-size: 10pt;
+            font-weight: 600;
+            margin-top: 20px;
+            color: #F56332;
+        }
+
+        .text_price
+        {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 8pt;
+            margin-top: 15px;
+        }
+
+        .more_button
+        {
+            position: absolute;
+            left: 49px;
+            bottom: 0px;
+            background-color: #F56332;
+            color: white;
+            height: 25px;
+            border-radius: 2px;
+            border: none;
+            font-size: 10pt;
+        }
+    </style>   
+
+    <div class="container">
+        <div class="inner_container">
+            <div class="picture1">
+                <!-- void -->
+            </div>
+            <div class="text_title">
+                Виртуальный хостинг
+            </div>
+            <div class="text_price">
+                3.95$ в месяц
+            </div>
+            <button class="more_button">
+                Подробнее
+            </button>
+        </div>
+        <div class="inner_container side_borders">
+            <div class="picture2">
+                <!-- void -->
+            </div>
+            <div class="text_title">
+                Облачный хостинг
+            </div>
+            <div class="text_price">
+                68.95$ в месяц
+            </div>
+            <button class="more_button">
+                Подробнее
+            </button>
+        </div>
+        <div class="inner_container">
+            <div class="picture3">
+                <!-- void -->
+            </div>
+            <div class="text_title">
+                Выделенный сервер
+            </div>
+            <div class="text_price">
+                217.95$ в месяц
+            </div>
+            <button class="more_button">
+                Подробнее
+            </button>
+        </div>
+    </div>
+</body>
+</html>
