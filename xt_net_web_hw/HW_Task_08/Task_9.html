@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <title>Task 8.9</title>
+</head>
+<body>
+    <style>
+        body
+        {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .step
+        {
+            width: 100px;
+            margin: 0px;
+            float: left;
+            display: inline-block;
+            background: linear-gradient(#DFDFDF 0%, #C0C0C0 50% ,#DFDFDF 100%);
+            text-align: center;
+            cursor: pointer;
+            padding: 5px 0px 5px 0px;
+            color: black;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .step:focus
+        {
+            background: linear-gradient(#A9DF81 0%, #69C725 50% ,#A9DF81 100%);
+            color: white;
+        }
+
+        .left_step
+        {
+            clip-path: polygon(0% 0%, 95% 0%, 100% 50%, 95% 100%, 0% 100%);
+        }
+
+        .mid_step
+        {
+            clip-path: polygon(0% 0%, 95% 0%, 100% 50%, 95% 100%, 0% 100%, 5% 50%);
+        }
+
+        .right_step
+        {
+            clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 5% 50%);
+        }
+    </style>
+
+    <div>
+        <div class="step left_step" tabindex="1">
+            Шаг 1
+        </div>
+        <div class="step mid_step" tabindex="2">
+            Шаг 2
+        </div>
+        <div class="step mid_step" tabindex="3">
+            Шаг 3
+        </div>
+        <div class="step right_step" tabindex="4">
+            Шаг 4
+        </div>
+    </div>
+</body>
+</html>

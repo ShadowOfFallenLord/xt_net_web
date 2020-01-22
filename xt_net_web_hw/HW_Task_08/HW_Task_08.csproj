@@ -40,6 +40,10 @@
     <Content Include="Task_2.html" />
     <Content Include="Task_3.html" />
     <Content Include="Task_4.html" />
+    <Content Include="Task_5\pic.png" />
+    <Content Include="Task_5\Task_5.html" />
+    <Content Include="Task_6.html" />
+    <Content Include="Task_6_ex.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
