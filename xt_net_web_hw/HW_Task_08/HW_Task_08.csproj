@@ -37,13 +37,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Task_1.html" />
+    <Content Include="Task_10\content_styles.css" />
+    <Content Include="Task_10\header_styles.css" />
+    <Content Include="Task_10\menu_styles.css" />
+    <Content Include="Task_10\right_menu_styles.css" />
+    <Content Include="Task_10\styles.css" />
+    <Content Include="Task_10\Task_10.html" />
     <Content Include="Task_2.html" />
     <Content Include="Task_3.html" />
     <Content Include="Task_4.html" />
     <Content Include="Task_5\pic.png" />
     <Content Include="Task_5\Task_5.html" />
     <Content Include="Task_6.html" />
-    <Content Include="Task_6_ex.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

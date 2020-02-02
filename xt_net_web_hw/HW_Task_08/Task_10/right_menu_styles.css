@@ -1,0 +1,37 @@
+﻿.body_right_menu_container
+{
+    padding: 5px 0 5px 0;
+    margin-left: 20px;
+    width: 230px;
+    float: left;
+    background-color: white;
+    border-radius: 5px;
+    font-size: 13px;
+}
+
+.body_right_menu_list
+{
+    margin: 0;
+    padding: 0;
+}
+
+.body_right_menu_list_item
+{
+    padding: 5px 0px 5px 20px;
+    list-style-type: none;
+    color: #2A5885;
+    background: 0;
+}
+
+.body_right_menu_list_item:hover
+{
+    background: #F0F2F5;
+}
+
+.body_right_menu_list_item_current
+{
+    color: black;
+    background: #F0F2F5;
+    border-left: 2px solid #5181B8;
+    font-weight: bold;
+}

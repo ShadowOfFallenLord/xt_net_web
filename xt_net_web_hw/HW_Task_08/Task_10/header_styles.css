@@ -1,0 +1,82 @@
+﻿.header_container 
+{
+    position: fixed;
+    top: 0;
+    width: 100%;
+    min-width: 730px;
+    height: 42px;
+    background-color: #4B77A8;
+}
+
+.header_item_left 
+{
+    display: inline-block;
+    float: left;
+    margin-left: 5%;
+    min-width: 10%;
+}
+
+.header_item_right 
+{
+    display: inline-block;
+    float: right;
+    margin-right: 10%;
+    min-width: 10%;
+}
+
+.header_logo 
+{
+    font-family: 'Century Gothic';
+    font-size: 200%;
+    color: white;
+    font-weight: bold;
+}
+
+.header_search 
+{
+    background-color: #224B79;
+    margin-top: 5px;
+    border: 0;
+    border-radius: 20px;
+    height: 30px;
+    width: 200px;
+    color: #81A1C7;
+    padding: 0 10px 0 10px;
+}
+
+.header_button 
+{
+    top: 0;
+    margin-left: 0;
+    padding: 0;
+    width: 42px;
+    height: 42px;
+    color: #224B79;
+    font-size: 120%;
+    background-color: #4B77A8;
+    border: 0;
+}
+
+.header_button:hover 
+{
+    background-color: #3E6898;
+}
+
+.header_name 
+{
+    margin-top: 7px;
+    display: inline-block;
+    float: left;
+    color: white;
+    font-size: 120%;
+}
+
+.header_face 
+{
+    margin-top: 5px;
+    margin-left: 5px;
+    display: inline-block;
+    float: left;
+    color: white;
+    font-size: 120%;
+}

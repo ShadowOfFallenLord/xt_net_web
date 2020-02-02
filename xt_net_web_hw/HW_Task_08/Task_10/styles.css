@@ -1,0 +1,18 @@
+﻿body 
+{
+    position: absolute;
+    top: 45px;
+    bottom: 0;
+    left: -8px;
+    right: -8px;
+    background-color: #EDEEF0;
+    font-family: 'Open Sans';
+    height: 940px;
+}
+
+.body_main_container
+{
+    margin: 0px auto 0 auto;
+    width: 975px;
+    height: 100%;
+}
