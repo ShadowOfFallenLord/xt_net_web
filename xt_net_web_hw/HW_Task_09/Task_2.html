@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <title>Task 9.2</title>
+</head>
+<body>
+    <div>
+        Входная строка:
+        <input id="instr" type="text" style="width: 500px" />
+        <button id="handlebtn">Handle</button>
+    </div>
+    <div>
+        <div style="width:114px; display: inline-block">
+            Результат:
+        </div>
+        <div id="result" style="display: inline-block"></div>
+    </div>
+
+    <script>
+        function find_numbers(str)
+        {
+            var reg_ex = /\d+(\.\d+)?/g;
+            return str.match(reg_ex);
+        }
+
+        function find_operators(str)
+        {
+            var reg_ex = /[+\-\/*]/g;
+            return str.match(reg_ex);
+        }
+
+        function first_number(str, numbers)
+        {
+            var res = parseFloat(numbers[0]);
+            for (var i = 0; i < str.length; i++)
+            {
+                var t = str[i];
+                if (t == '-')
+                {
+                    return -res;
+                }
+                if (t != ' ' && t - 0 != NaN)
+                {
+                    return res;
+                }
+            }
+        }
+
+        function use_operator(op1, op2, act)
+        {
+            var a = parseFloat(op1);
+            var b = parseFloat(op2);
+            switch (act)
+            {
+                case '+': return a + b;
+                case '-': return a - b;
+                case '/': return a / b;
+                case '*': return a * b;
+            }
+        }
+
+        function handle_input_string()
+        {
+            var input_str = document.getElementById('instr').value;
+            // input /\
+
+            var numbers = find_numbers(input_str);
+            var operators = find_operators(input_str);
+            var res = first_number(input_str, numbers);
+
+            var number_index = 1;
+            var oper_index = (res < 0) ? 1 : 0;
+
+            while (number_index < numbers.length)
+            {
+                res = use_operator(res, numbers[number_index], operators[oper_index]);
+                number_index++;
+                oper_index++;
+            }
+
+            // output \/
+            document.getElementById('result').innerHTML = res;
+        }
+        document.getElementById('handlebtn').addEventListener('click', handle_input_string);
+    </script>
+</body>
+</html>
