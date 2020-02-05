@@ -1,0 +1,184 @@
+﻿<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <title>Task 9.3</title>
+</head>
+<body>
+    <style>
+        .conatiner_select_left
+        {
+            position: absolute;
+            margin: 0 0 0 0;
+            width: 100px;
+            overflow: hidden;
+        }
+
+        .buttons_container
+        {            
+            position: absolute;
+            margin: 0 0 0 100px;
+            width: 100px;
+        }
+
+        .button_style
+        {
+            width: 50px;
+        }
+
+        .conatiner_select_right
+        {
+            position: absolute;
+            margin: 0 0 0 150px;
+            width: 100px;
+            overflow: hidden;
+        }
+    </style>
+    <div>
+        <select size="5" class="conatiner_select_left" id="container_1">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+        </select>
+
+        <div class="buttons_container">
+            <input type="button" value=">>" class="button_style" id="btn_all_to_right"/>
+            <br />
+            <input type="button" value=">" class="button_style" id="btn_to_right"/>
+            <br />
+            <input type="button" value="<" class="button_style" id="btn_to_left"/>
+            <br />
+            <input type="button" value="<<" class="button_style" id="btn_all_to_left"/>
+        </div>        
+
+        <select size="5" class="conatiner_select_right" id="container_2">
+            <!-- void -->
+        </select>
+    </div>
+    <script>
+        class ListSwaper
+        {
+            constructor(containers, buttons)
+            {
+                this.data = {
+                    containers: containers,
+                    buttons: buttons,
+                    error_func: this.at_error,
+                }
+            }
+
+            link_event_functions()
+            {
+                //alert('link');
+                this.data.buttons.all_to_left_button.addEventListener('click', this.event_all_to_left(this.data));
+                this.data.buttons.all_to_right_button.addEventListener('click', this.event_all_to_right(this.data));
+                this.data.buttons.to_left_button.addEventListener('click', this.event_to_left(this.data));
+                this.data.buttons.to_right_button.addEventListener('click', this.event_to_right(this.data));
+            }
+
+            unlink_event_functions()
+            {
+                //alert('unlink');
+                this.data.buttons.all_to_left_button.removeEventListener('click', this.event_all_to_left(this.data));
+                this.data.buttons.all_to_right_button.removeEventListener('click', this.event_all_to_right(this.data));
+                this.data.buttons.to_left_button.removeEventListener('click', this.event_to_left(this.data));
+                this.data.buttons.to_right_button.removeEventListener('click', this.event_to_right(this.data));
+            }
+
+            event_all_to_left(data)
+            {
+                return () => {
+                    var con_r = data.containers.container_right;
+                    var con_l = data.containers.container_left;
+
+                    for (var i = con_r.options.length - 1; i >= 0; i--)
+                    {
+                        con_l.options[con_l.options.length] = con_r.options[0];
+                    }
+                }                
+            }
+
+            event_all_to_right(data)
+            {
+                return () => {
+                    var con_r = data.containers.container_right;
+                    var con_l = data.containers.container_left;
+
+                    for (var i = con_l.options.length - 1; i >= 0; i--)
+                    {
+                        con_r.options[con_r.options.length] = con_l.options[0];
+                    }
+                }   
+            }
+
+            event_to_left(data)
+            {
+                return () => {
+                    var con_r = data.containers.container_right;
+                    var con_l = data.containers.container_left;
+                    var index = con_r.selectedIndex;
+
+                    if (index == -1)
+                    {
+                        data.error_func();
+                    }
+                    else
+                    {
+                        con_l.options[con_l.options.length] = con_r.options[index];
+                    }
+                }   
+            }
+
+            event_to_right(data)
+            {
+                return () => {
+                    var con_r = data.containers.container_right;
+                    var con_l = data.containers.container_left;
+                    var index = con_l.selectedIndex;
+
+                    if (index == -1)
+                    {
+                        data.error_func();
+                    }
+                    else
+                    {
+                        con_r.options[con_r.options.length] = con_l.options[index];
+                    }
+                }   
+            }
+
+            at_error()
+            {
+                alert('НЕ ВЫБРАН ЭЛЕМЕНТ ДЛЯ ПЕРЕМЕЩЕНИЯ!')
+                alert('ЕСЛИ ПРОДОЛЖАТЬ ПОПЫТКИ, УСТРОЙСТВО МОЖЕТ БЫТЬ УНИЧТОЖЕНО!!!')
+                setTimeout(() => alert('AAAAAAAAAAAA!!1!'), 500);
+            }
+        }
+
+        function init_test_list_class()
+        {
+            var containers = {
+                container_left: document.getElementById('container_1'),
+                container_right: document.getElementById('container_2'),
+            };
+
+            var buttons = {
+                all_to_left_button: document.getElementById('btn_all_to_left'),
+                all_to_right_button: document.getElementById('btn_all_to_right'),
+                to_left_button: document.getElementById('btn_to_left'),
+                to_right_button: document.getElementById('btn_to_right'),
+            };
+            //alert('init');
+            var res = new ListSwaper(containers, buttons);
+            return res;
+        }
+
+        var test_linked_lists = init_test_list_class();
+        test_linked_lists.link_event_functions();
+    </script>
+
+</body>
+</html>
