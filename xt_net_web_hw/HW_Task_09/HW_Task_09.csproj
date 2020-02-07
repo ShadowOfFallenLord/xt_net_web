@@ -39,6 +39,13 @@
     <Content Include="Task_1.html" />
     <Content Include="Task_2.html" />
     <Content Include="Task_3.html" />
+    <Content Include="Task_4.html" />
+    <Content Include="Task_4_pages\inner_page_1.html" />
+    <Content Include="Task_4_pages\inner_page_2.html" />
+    <Content Include="Task_4_pages\inner_page_3.html" />
+    <Content Include="Task_4_pages\inner_page_4.html" />
+    <Content Include="Task_4_pages\inner_page_5.html" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
