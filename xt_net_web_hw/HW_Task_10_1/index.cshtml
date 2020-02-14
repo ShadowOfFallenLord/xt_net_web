@@ -1,0 +1,43 @@
+﻿@using HW_Task_10_1;
+@using Task_6.BLL;
+@{
+    Layout = "~/Layouts/_MainLayout.cshtml";
+    Page.Title = "Main";
+}
+
+@if (LogicKeeper.IsFirst)
+{
+    LogicKeeper.IsFirst = false;
+    switch (LogicKeeper.Logic.InitError)
+    {
+        case InitErrors.FileExistError:
+            @:DataBase file not found!
+            <br />
+            @:Check
+            @LogicKeeper.Logic.DataBaseFile
+            @:file.
+            <br />
+            @:DataBase created empty.
+            break;
+        case InitErrors.FileFormatError:
+            @:DataBase file was damaged.
+            <br />
+            @:Check
+            @LogicKeeper.Logic.DataBaseFile
+            @:file.
+            <br />
+            @:DataBase created empty.
+            break;
+        case InitErrors.None:
+            @:DataBase loaded successfully
+            break;
+    }
+    <br />
+    <br />
+}
+Make your choise:
+<br />
+<br />
+<a href="~/Pages/LookUsers.cshtml">- Look users</a>
+<br />
+<a href="~/Pages/Save.cshtml">- Save</a>

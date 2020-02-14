@@ -1,0 +1,19 @@
+﻿@using HW_Task_10_1;
+@using Task_6.BLL;
+
+@{
+    Layout = "~/Layouts/_MainLayout.cshtml";
+    Page.Title = "AddUsers";
+}
+
+<form action="~/Pages/User/AUStub.cshtml" method="post">
+    Name: 
+    <br />
+    <input type="text" name="name_input" />
+    <br />
+    Date of birth:
+    <br />
+    <input type="date" name="dob_input" />
+    <br />
+    <input type="submit" value="Создать" />
+</form>

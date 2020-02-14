@@ -16,9 +16,9 @@ namespace Task_6.BLL
         public string DataBaseFile { get; private set; }
         public InitErrors InitError { get; private set; }
 
-        public UserLogic()
+        public UserLogic(string file)
         {
-            DataBaseFile = Environment.CurrentDirectory + "\\data.base";
+            DataBaseFile = file;
             InitError = InitErrors.None;
 
             try
@@ -40,6 +40,11 @@ namespace Task_6.BLL
                     data_base = new DataBase();
                 }
             }
+        }
+
+        public UserLogic() : this(Environment.CurrentDirectory + "\\data.base")
+        {
+            //
         }
 
         public string[] GetAllUsers()
@@ -103,5 +108,7 @@ namespace Task_6.BLL
         {
             return data_base.Save(DataBaseFile);
         }
+
+        public int UserCount { get => data_base.UserDataBase.Count; }
     }
 }

@@ -1,0 +1,52 @@
+﻿@using HW_Task_10_1;
+@using Task_6.BLL;
+@using Task_6.Interfaces;
+
+@{
+    Layout = "~/Layouts/_MainLayout.cshtml";
+    Page.Title = "AddAward";
+
+    int id = -1;
+    bool is_error = false;
+
+    if (!int.TryParse(Request["id"], out id) || id < 0 || id >= LogicKeeper.Logic.UserCount)
+    {
+        is_error = true;
+    }
+
+    IAward[] awards = null;
+    if (!is_error)
+    {
+        awards = LogicKeeper.Logic.GetAllAwards();
+    }
+}
+
+@if (!is_error)
+{
+    @:Choise award:
+    <br />
+    foreach (IAward award in awards)
+    {
+        <br />
+        <a href="~/Pages/User/Awards/AddAward.cshtml?id=@id&name=@award.Title">
+            @("-")
+            @award.ID
+            @(")")
+            @award.Title
+        </a>
+    }
+    <br />
+    <br />
+    <a href="~/Pages/User/UserPage.cshtml?id=@id">
+        - Back
+    </a>
+}
+else
+{
+    @: Incorrect ID! User not found :c
+    <br />
+    <br />
+    <a href="~/Pages/LookUsers.cshtml">
+        - Back
+    </a>
+}

@@ -1,0 +1,48 @@
+﻿@using HW_Task_10_1;
+@using Task_6.BLL;
+
+@{
+    Layout = "~/Layouts/_MainLayout.cshtml";
+    Page.Title = "AddAward";
+
+    int id = -1;
+    bool is_error = false;
+
+    if (!int.TryParse(Request["id"], out id) || id < 0 || id >= LogicKeeper.Logic.UserCount)
+    {
+        is_error = true;
+    }
+}
+
+@if (!is_error)
+{
+    <input type="text" id="award_title" />
+    <button id="btn_send">
+        Добавить
+    </button>
+    <script>
+        var inputer = document.getElementById('award_title');
+        function send_title()
+        {
+            var name = inputer.value;
+            if (name.length < 1)
+            {
+                alert('Award title can not be empty!');
+            }
+            else
+            {
+                location.href = '/Pages/User/Awards/AddAward.cshtml?id=' + @id.ToString() + '&name=' + name;
+            }
+        }
+        document.getElementById('btn_send').addEventListener('click', send_title);
+    </script>
+}
+else
+{
+    @: Incorrect ID! User not found :c
+    <br />
+    <br />
+    <a href="~/Pages/LookUsers.cshtml">
+        - Back
+    </a>
+}

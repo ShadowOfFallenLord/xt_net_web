@@ -1,0 +1,18 @@
+﻿@using HW_Task_10_1;
+@using Task_6.BLL;
+@{
+    Layout = "~/Layouts/_MainLayout.cshtml";
+    Page.Title = "Save";
+}
+
+@if (LogicKeeper.Logic.Save())
+{
+    @:DataBase saved successfully.
+}
+else
+{
+    @:DataBase not saved.
+}
+<br />
+<br />
+<a href="~/index.cshtml">- Back</a>

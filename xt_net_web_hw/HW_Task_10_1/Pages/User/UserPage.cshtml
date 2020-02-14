@@ -1,0 +1,83 @@
+﻿@using HW_Task_10_1;
+@using Task_6.Interfaces;
+
+@{
+    Layout = "~/Layouts/_MainLayout.cshtml";
+    Page.Title = "UserPages";
+
+    int id = -1;
+    bool is_error = false;
+
+    if (!int.TryParse(Request["id"], out id) || id < 0 || id >= LogicKeeper.Logic.UserCount)
+    {
+        is_error = true;
+    }
+
+    IUser user = null;
+    if (!is_error)
+    {
+        user = LogicKeeper.Logic.GetUserInfo(id);
+    }
+}
+
+@if (!is_error)
+{
+    @:User info:
+    <br />
+    @:ID:
+    @user.ID
+    <br />
+    @:Name:
+    @user.Name
+    <br />
+    @:Date of Birth:
+    @($"{user.DateOfBirth:d}")
+    <br />
+    @:Age:
+    @user.Age
+    <br />
+    @:Awards:
+
+    if (user.Awards.Count == 0)
+    {
+        @:have not awards
+    }
+    else
+    {
+        <br />
+        foreach (IAward award in user.Awards)
+        {
+            @:-
+            @award.ID
+            @: :
+            @award.Title
+            <br />
+        }
+    }
+    <br />
+    <br />
+    <a href="~/Pages/User/Awards/AddExistingAward.cshtml?id=@id">
+        - Add existing award
+    </a>
+    <br />
+    <a href="~/Pages/User/Awards/AddNewAward.cshtml?id=@id">
+        - Add new award
+    </a>
+    <br />
+    <a href="~/Pages/User/RemoveUser.cshtml?id=@id">
+        - Remove
+    </a>
+    <br />
+    <a href="~/Pages/LookUsers.cshtml">
+        - Back
+    </a>
+}
+else
+{
+    @: Incorrect ID! User not found :c
+    <br />
+    <br />
+    <a href="~/Pages/LookUsers.cshtml">
+        - Back
+    </a>
+}

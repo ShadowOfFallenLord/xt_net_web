@@ -1,0 +1,37 @@
+﻿@using HW_Task_10_1;
+@{
+    Layout = null;
+    int id = -1;
+    bool is_error = false;
+
+    if (!int.TryParse(Request["id"], out id) || id < 0 || id >= LogicKeeper.Logic.UserCount)
+    {
+        is_error = true;
+    }
+
+    if(!is_error)
+    {
+        string award_title = Request["name"];
+        LogicKeeper.Logic.AddAward(id, award_title);
+        Response.Redirect($"~/Pages/User/UserPage.cshtml?id={id}");
+    }
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <div>
+        Incorrect ID! User not found :c
+        <br />
+        <br />
+        <a href="~/Pages/LookUsers.cshtml">
+            - Back
+        </a>
+    </div>
+</body>
+</html>

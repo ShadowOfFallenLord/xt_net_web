@@ -1,0 +1,50 @@
+﻿@using HW_Task_10_1;
+@using Task_6.Interfaces;
+
+@{
+    Layout = "~/Layouts/_MainLayout.cshtml";
+    Page.Title = "RemoveUser";
+
+    string str_id = Request["id"];
+    string str_conf = Request["conf"];
+    int id = -1;
+    bool is_error = false;
+
+    if (str_id == null || !int.TryParse(str_id, out id))
+    {
+        is_error = true;
+    }
+
+    if (!is_error && str_conf == "YES")
+    {
+        LogicKeeper.Logic.Remove(id);
+        Response.Redirect("~/Pages/LookUsers.cshtml");
+    }
+}
+
+@if (!is_error)
+{
+    @:Rmmove user "
+    @LogicKeeper.Logic.GetUserInfo(id).Name
+    @:" ?
+    <br />
+    <br />
+    <a href="~/Pages/User/RemoveUser.cshtml?id=@id&conf=YES">
+        - Yes
+    </a>
+    <br />
+    <a href="~/Pages/User/UserPage.cshtml?id=@id">
+        - No
+    </a>
+}
+else
+{
+    @: Incorrect ID! User not found :c
+    <br />
+    <br />
+    <a href="~/Pages/LookUsers.cshtml">
+        - Back
+    </a>
+}
+
+
