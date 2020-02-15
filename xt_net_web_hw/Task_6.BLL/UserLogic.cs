@@ -57,22 +57,27 @@ namespace Task_6.BLL
             return data_base.UserDataBase[id];
         }
 
-        public bool Add(string name, DateTime dob, int age)
+        public bool UpdateUser(IUser in_user, string name, DateTime date)
+        {
+            User user = in_user as User;
+            user.Name = name;
+            user.DateOfBirth = date;
+            return true;
+        }
+
+        public bool AddUser(string name, DateTime dob, int age)
         {
             return data_base.UserDataBase.Add(name, dob, age);
         }
 
-        public bool Remove(int id)
+        public bool RemoveUser(int id)
         {
             return data_base.UserDataBase.Remove(data_base.UserDataBase[id]);
         }
 
-        public bool ContainsAward(string title)
-        {
-            return data_base.AwardKeeper.ContainsAward(title);
-        }
+        public int UserCount { get => data_base.UserDataBase.Count; }
 
-        public bool AddAward(int user_id, int award_id)
+        public bool AddAwardToUser(int user_id, int award_id)
         {
             return data_base
                 .UserDataBase[user_id]
@@ -82,7 +87,7 @@ namespace Task_6.BLL
                     .GetAward(award_id));
         }
 
-        public bool AddAward(int user_id, string award_title)
+        public bool AddAwardToUser(int user_id, string award_title)
         {
             return data_base
                 .UserDataBase[user_id]
@@ -92,7 +97,7 @@ namespace Task_6.BLL
                     .GetAward(award_title));
         }
 
-        public bool RemoveAward(int user_id, int award_id)
+        public bool RemoveAwardToUser(int user_id, int award_id)
         {
             return data_base
                 .UserDataBase[user_id]
@@ -104,11 +109,41 @@ namespace Task_6.BLL
             return data_base.AwardKeeper.GetAwardsList();
         }
 
+        public bool ContainsAward(int id)
+        {
+            return data_base.AwardKeeper.ContainsAward(id);
+        }
+
+        public IAward GetAward(int id)
+        {
+            return data_base.AwardKeeper.GetAward(id);
+        }
+
+        public bool AddAward(string title)
+        {
+            if(data_base.AwardKeeper.ContainsAward(title))
+            {
+                return false;
+            }
+            data_base.AwardKeeper.GetAward(title);
+            return true;
+        }
+
+        public bool UpdateAward(IAward in_award, string title)
+        {
+            Award award = in_award as Award;
+            award.Title = title;
+            return true;
+        }
+
+        public bool RemoveAward(int id)
+        {
+            return data_base.AwardKeeper.RemoveAward(id);
+        }
+
         public bool Save()
         {
             return data_base.Save(DataBaseFile);
         }
-
-        public int UserCount { get => data_base.UserDataBase.Count; }
     }
 }

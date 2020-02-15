@@ -1,0 +1,44 @@
+﻿@using HW_Task_10;
+@{
+    Layout = "~/Layouts/_MainLayout.cshtml";
+
+    string title = null;
+    bool title_error = false;
+
+    if (IsPost)
+    {
+        title = Request["title"];
+
+        if (title == null || title.Length < 1)
+        {
+            title_error = true;
+        }
+        else
+        {
+            LogicKeeper.Logic.AddAward(title);
+            Response.Redirect("~/Pages/LookAwards.cshtml");
+        }
+    }
+}
+
+@if (!title_error)
+{
+    <form action="~/Pages/Award/AddAward.cshtml" method="post">
+        Title:
+        <input type="text" name="title" />
+        <br />
+        <input type="submit" value="Add" />
+    </form>
+}
+else
+{
+    @:"
+    @title
+    @:" is not correct title!
+}
+<br />
+<br />
+<a href="~/Pages/LookAwards.cshtml">
+    - Back
+</a>
+

@@ -107,6 +107,12 @@
     <Content Include="Pages\User\Awards\AddAward.cshtml" />
     <Content Include="Pages\User\AddUser.cshtml" />
     <Content Include="Pages\User\AUStub.cshtml" />
+    <Content Include="Pages\User\UpdateUser.cshtml" />
+    <Content Include="Pages\User\Awards\RemoveAward.cshtml" />
+    <Content Include="Pages\LookAwards.cshtml" />
+    <Content Include="Pages\Award\UpdateAward.cshtml" />
+    <Content Include="Pages\Award\RemoveAward.cshtml" />
+    <Content Include="Pages\Award\AddAward.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

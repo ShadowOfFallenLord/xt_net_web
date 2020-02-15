@@ -1,4 +1,4 @@
-﻿@using HW_Task_10_1;
+﻿@using HW_Task_10;
 @{
     Layout = null;
     int id = -1;
@@ -12,7 +12,7 @@
     if(!is_error)
     {
         string award_title = Request["name"];
-        LogicKeeper.Logic.AddAward(id, award_title);
+        LogicKeeper.Logic.AddAwardToUser(id, award_title);
         Response.Redirect($"~/Pages/User/UserPage.cshtml?id={id}");
     }
 }
@@ -29,7 +29,7 @@
         Incorrect ID! User not found :c
         <br />
         <br />
-        <a href="~/Pages/LookUsers.cshtml">
+        <a href="~/Pages/User/UserPage.cshtml?id=@id">
             - Back
         </a>
     </div>

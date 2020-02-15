@@ -1,6 +1,5 @@
-﻿@using HW_Task_10_1;
+﻿@using HW_Task_10;
 @using Task_6.Interfaces;
-
 @{
     Layout = "~/Layouts/_MainLayout.cshtml";
     Page.Title = "UserPages";
@@ -51,10 +50,17 @@
             @award.ID
             @: :
             @award.Title
+            <a href="~/Pages/User/Awards/RemoveAward.cshtml?id=@id&award_id=@award.ID">
+                (remove)
+            </a>
             <br />
         }
     }
     <br />
+    <br />
+    <a href="~/Pages/User/UpdateUser.cshtml?id=@id">
+        - Update
+    </a>
     <br />
     <a href="~/Pages/User/Awards/AddExistingAward.cshtml?id=@id">
         - Add existing award

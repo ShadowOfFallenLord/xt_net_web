@@ -9,8 +9,8 @@ namespace Task_6.DAL.Users
     public class User : IUser
     {
         public int ID { get; set; }
-        public string Name { get; private set; }
-        public DateTime DateOfBirth { get; private set; }
+        public string Name { get; set; }
+        public DateTime DateOfBirth { get; set; }
         public int Age { get; set; }
         public IAwardsPool Awards { get; private set; }
 

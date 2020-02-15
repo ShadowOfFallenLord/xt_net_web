@@ -1,6 +1,4 @@
-﻿@using HW_Task_10_1;
-@using Task_6.Interfaces;
-
+﻿@using HW_Task_10;
 @{
     Layout = "~/Layouts/_MainLayout.cshtml";
     Page.Title = "RemoveUser";
@@ -17,7 +15,7 @@
 
     if (!is_error && str_conf == "YES")
     {
-        LogicKeeper.Logic.Remove(id);
+        LogicKeeper.Logic.RemoveUser(id);
         Response.Redirect("~/Pages/LookUsers.cshtml");
     }
 }

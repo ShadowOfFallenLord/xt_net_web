@@ -1,4 +1,4 @@
-﻿@using HW_Task_10_1;
+﻿@using HW_Task_10;
 @{
     Layout = null;
 
@@ -24,7 +24,7 @@
 
         if(!name_fail && !date_fail)
         {
-            add_fail = !LogicKeeper.Logic.Add(name, date, DateTime.Now.Year - date.Year);
+            add_fail = !LogicKeeper.Logic.AddUser(name, date, DateTime.Now.Year - date.Year);
         }
 
         if(!add_fail)

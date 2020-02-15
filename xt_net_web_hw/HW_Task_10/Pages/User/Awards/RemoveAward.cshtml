@@ -1,0 +1,86 @@
+﻿@using HW_Task_10;
+@using Task_6.Interfaces;
+@{
+    Layout = "~/Layouts/_MainLayout.cshtml";
+    int id = -1;
+    int award_id = -1;
+    bool is_error = false;
+
+    if (!int.TryParse(Request["id"], out id) || id < 0 || id >= LogicKeeper.Logic.UserCount)
+    {
+        is_error = true;
+    }
+
+    if (!int.TryParse(Request["award_id"], out award_id) || !LogicKeeper.Logic.ContainsAward(award_id))
+    {
+        is_error = true;
+    }
+
+    if (!is_error)
+    {
+        string rem_all = Request["rem_all"];
+        if (rem_all != null)
+        {
+            if (rem_all == "yes")
+            {
+                int end_index = LogicKeeper.Logic.UserCount;
+                for (int i = 0; i < end_index; i++)
+                {
+                    LogicKeeper.Logic.RemoveAwardToUser(i, award_id);
+                }
+            }
+
+            if (rem_all == "no")
+            {
+                LogicKeeper.Logic.RemoveAwardToUser(id, award_id);
+            }
+
+            Response.Redirect($"~/Pages/User/UserPage.cshtml?id={id}");
+        }
+    }
+}
+
+
+@if (is_error)
+{
+    if (id == -1)
+    {
+        @:Incorrect ID! User not found :c
+        <br />
+    }
+
+    if (award_id == -1)
+    {
+        @:Incorrect award ID! Award not found :c
+        <br />
+    }
+
+    if (id != -1 && award_id != -1)
+    {
+        @:I don't know, in doesn't work...
+        <br />
+    }
+
+    <br />
+    <a href="~/Pages/LookUsers.cshtml">
+        - Back
+    </a>
+}
+else
+{
+    @:Remove "
+    @LogicKeeper.Logic.GetAward(award_id).Title
+    @:" from all users?
+    <br />
+    <a href="~/Pages/User/Awards/RemoveAward.cshtml?id=@id&award_id=@award_id&rem_all=yes">
+        - Yes
+    </a>
+    <br />
+    <a href="~/Pages/User/Awards/RemoveAward.cshtml?id=@id&award_id=@award_id&rem_all=no">
+        - No, only this user
+    </a>
+    <br />
+    <a href="~/Pages/User/UserPage.cshtml?id=@id">
+        - No, I changed my mind
+    </a>
+}

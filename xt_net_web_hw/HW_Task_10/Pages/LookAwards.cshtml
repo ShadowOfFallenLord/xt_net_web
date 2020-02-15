@@ -1,0 +1,33 @@
+﻿@using HW_Task_10;
+@using Task_6.Interfaces;
+@{
+    Layout = "~/Layouts/_MainLayout.cshtml";
+    Page.Title = "LookAwards";
+    IAward[] awards = LogicKeeper.Logic.GetAllAwards();
+}
+
+You look users.
+<br />
+<br />
+<a href="~/Pages/Award/AddAward.cshtml">- Add award</a>
+<br />
+<br />
+DataBase contains @awards.Length awards.
+@for (int i = 0; i < awards.Length; i++)
+{
+    <br />
+    @:-
+    @awards[i].ID@:)
+    @awards[i].Title
+    <a href="~/Pages/Award/UpdateAward.cshtml?id=@awards[i].ID">
+        (update)
+    </a>
+    <a href="~/Pages/Award/RemoveAward.cshtml?id=@awards[i].ID">
+        (remove)
+    </a>
+}
+<br />
+<br />
+<a href="~/index.cshtml">
+    - Back
+</a>

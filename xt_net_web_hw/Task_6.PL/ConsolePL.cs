@@ -280,7 +280,7 @@ namespace Task_6.PL
                         break;
                     case 2:
                         Console.Clear();
-                        if (logic.Remove(index))
+                        if (logic.RemoveUser(index))
                         {
                             Console.WriteLine("User delete successfully.");
                         }
@@ -311,7 +311,7 @@ namespace Task_6.PL
                 Console.Write("> ");
             }
 
-            if(logic.Add(name, date, DateTime.Now.Year - date.Year))
+            if(logic.AddUser(name, date, DateTime.Now.Year - date.Year))
 
             {
                 Console.WriteLine("User added successfully.");
@@ -456,7 +456,7 @@ namespace Task_6.PL
                 if (input >= '0' && input <= '9')
                 {
                     int index = (input - '0') + (current_page - 1) * records_on_page;
-                    logic.AddAward(user_id, index);
+                    logic.AddAwardToUser(user_id, index);
                     break;
                 }
 
@@ -498,7 +498,7 @@ namespace Task_6.PL
             switch (input)
             {
                 case 1:
-                    logic.AddAward(user_id, title);
+                    logic.AddAwardToUser(user_id, title);
                     break;
                 case 2:                    
                     break;

@@ -12,5 +12,7 @@ namespace Task_6.Interfaces
         IAward GetAward(int id);
         IAward GetAward(string title);
         bool ContainsAward(string title);
+        bool ContainsAward(int id);
+        bool RemoveAward(int id);
     }
 }

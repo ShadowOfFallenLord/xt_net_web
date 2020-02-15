@@ -68,6 +68,32 @@ namespace Task_6.DAL.Awards
             return true;
         }
 
+        public bool ContainsAward(int id)
+        {
+            IAward award = awards.Find((x) => (x.ID == id));
+            if (award == null)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool RemoveAward(int id)
+        {
+            IAward award = awards.Find((x) => (x.ID == id));
+            if (award == null)
+            {
+                return false;
+            }
+
+            for(int i = award.ID + 1; i < awards.Count; i++)
+            {
+                (awards[i] as Award).ID--;
+            }
+            awards.RemoveAt(award.ID);
+            return true;
+        }
+
         public override string ToString()
         {
             StringBuilder builder = new StringBuilder();
