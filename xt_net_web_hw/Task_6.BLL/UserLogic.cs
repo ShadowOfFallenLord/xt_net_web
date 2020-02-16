@@ -7,6 +7,7 @@ using Task_6.DAL;
 using Task_6.DAL.Users;
 using Task_6.DAL.Awards;
 using Task_6.Interfaces;
+using Newtonsoft.Json;
 
 namespace Task_6.BLL
 {
@@ -23,13 +24,20 @@ namespace Task_6.BLL
 
             try
             {
-                data_base = new DataBase(DataBaseFile);
+                string text_file = File.ReadAllText(DataBaseFile);
+                data_base = 
+                    JsonConvert.DeserializeObject<DataBase>(text_file);
+                    //new DataBase(DataBaseFile);
             }
             catch(FileNotFoundException)
             {
                 InitError = InitErrors.FileExistError;
             }
-            catch(FormatException)
+            catch (FormatException)
+            {
+                InitError = InitErrors.FileFormatError;
+            }
+            catch (Exception)
             {
                 InitError = InitErrors.FileFormatError;
             }
@@ -143,7 +151,16 @@ namespace Task_6.BLL
 
         public bool Save()
         {
-            return data_base.Save(DataBaseFile);
+            using (StreamWriter file = new StreamWriter(DataBaseFile))
+            {
+                file.Write(JsonConvert.SerializeObject(data_base));
+            }
+            return true;
+        }
+
+        public string OAOAO()
+        {
+            return JsonConvert.SerializeObject(data_base);
         }
     }
 }

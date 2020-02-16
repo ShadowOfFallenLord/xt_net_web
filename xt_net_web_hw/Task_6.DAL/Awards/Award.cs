@@ -5,9 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using Task_6.Interfaces;
+using Newtonsoft.Json;
 
 namespace Task_6.DAL.Awards
 {
+    [JsonObject]
     public class Award : IAward
     {
         public int ID { get; set; }

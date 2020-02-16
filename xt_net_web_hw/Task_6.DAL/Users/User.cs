@@ -3,16 +3,23 @@ using System.Text;
 using Task_6.DAL.Awards;
 using Task_6.Interfaces;
 using System.Linq;
+using Newtonsoft.Json;
+using System.Drawing;
 
 namespace Task_6.DAL.Users
 {
+    [JsonObject]
     public class User : IUser
     {
         public int ID { get; set; }
         public string Name { get; set; }
         public DateTime DateOfBirth { get; set; }
         public int Age { get; set; }
-        public IAwardsPool Awards { get; private set; }
+        [JsonProperty("AwardsPoolInUser")]
+        private AwardsPool awards_pool;
+        [JsonIgnore]
+        public IAwardsPool Awards { get => awards_pool; }
+        //public Bitmap Image { get; set; }
 
         public User(int id, string name, DateTime dob, int age, params IAward[] awards)
         {
@@ -20,27 +27,7 @@ namespace Task_6.DAL.Users
             Name = name;
             DateOfBirth = dob;
             Age = age;
-            Awards = new AwardsPool(awards);
-        }
-
-        public override string ToString()
-        {
-            StringBuilder builder = new StringBuilder();
-
-            builder.Append("<<");
-
-            builder.Append($"\"{ID}\",");
-            builder.Append($"\"{Name}\",");
-            builder.Append($"\"{DateOfBirth}\",");
-            builder.Append($"\"{Age}\"");
-            builder.Append(":");
-            foreach(IAward i in Awards)
-            {
-                builder.Append($"{{{i.Title}}}");
-            }
-            builder.Append(">>");
-
-            return builder.ToString();
+            awards_pool = new AwardsPool(awards);
         }
     }
 }

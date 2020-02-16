@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,25 +7,28 @@ using Task_6.Interfaces;
 
 namespace Task_6.DAL.Users
 {   
+    [JsonObject]
     public class UserDataBase : IUserDataBase
     {
-        private List<IUser> users;
+        [JsonProperty("Users")]
+        private List<User> users;
 
         public UserDataBase()
         {
-            users = new List<IUser>();
+            users = new List<User>();
         }
 
-        public UserDataBase(params IUser[] users)
+        public UserDataBase(params User[] users)
         {
-            this.users = new List<IUser>(users);
+            this.users = new List<User>(users);
         }
 
         public UserDataBase(int count)
         {
-            users = new List<IUser>(count);
+            users = new List<User>(count);
         }
 
+        [JsonIgnore]
         public int Count => users.Count;
 
         public IUser this[int index]
@@ -39,7 +43,7 @@ namespace Task_6.DAL.Users
                 return false;
             }
 
-            IUser user = new User(users.Count, name, dob, age, awards);
+            User user = new User(users.Count, name, dob, age, awards);
             users.Add(user);
             return true;
         }
