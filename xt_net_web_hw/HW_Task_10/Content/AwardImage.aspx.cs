@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.IO;
-using System.Drawing;
+
 
 namespace HW_Task_10.Content
 {
-    public partial class UserImage : System.Web.UI.Page
+    public partial class AwardImage : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -22,7 +23,7 @@ namespace HW_Task_10.Content
             else
             {
                 ImageConverter converter = new ImageConverter();
-                using (var buffer = new MemoryStream(LogicKeeper.Logic.GetUserInfo(id).Image))
+                using (var buffer = new MemoryStream(LogicKeeper.Logic.GetAward(id).Image))
                 {
                     using (Bitmap image = new Bitmap(buffer))
                     {

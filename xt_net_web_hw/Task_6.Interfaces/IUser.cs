@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace Task_6.Interfaces
 {
@@ -13,5 +14,6 @@ namespace Task_6.Interfaces
         DateTime DateOfBirth { get; }
         int Age { get; }
         IAwardsPool Awards { get; }
+        byte[] Image { get;  }
     }
 }

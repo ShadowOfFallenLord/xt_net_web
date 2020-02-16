@@ -14,11 +14,13 @@ namespace Task_6.DAL.Awards
     {
         public int ID { get; set; }
         public string Title { get; set; }
+        public byte[] Image { get; set; }
 
         public Award(int id, string title)
         {
             ID = id;
             Title = title;
+            Image = DefaultImageKeeper.DefaultImage;
         }
     }
 }

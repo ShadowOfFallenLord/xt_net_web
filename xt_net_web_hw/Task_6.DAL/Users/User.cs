@@ -19,7 +19,7 @@ namespace Task_6.DAL.Users
         private AwardsPool awards_pool;
         [JsonIgnore]
         public IAwardsPool Awards { get => awards_pool; }
-        //public Bitmap Image { get; set; }
+        public byte[] Image { get; set; }
 
         public User(int id, string name, DateTime dob, int age, params IAward[] awards)
         {
@@ -28,6 +28,7 @@ namespace Task_6.DAL.Users
             DateOfBirth = dob;
             Age = age;
             awards_pool = new AwardsPool(awards);
+            Image = DefaultImageKeeper.DefaultImage;
         }
     }
 }

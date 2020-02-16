@@ -11,7 +11,7 @@
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HW_Task_10_1</RootNamespace>
+    <RootNamespace>HW_Task_10</RootNamespace>
     <AssemblyName>HW_Task_10</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
@@ -88,10 +88,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\AwardImage.aspx" />
     <Content Include="Content\UserImage.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Content\AwardImage.aspx.cs">
+      <DependentUpon>AwardImage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Content\AwardImage.aspx.designer.cs">
+      <DependentUpon>AwardImage.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Content\UserImage.aspx.cs">
       <DependentUpon>UserImage.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
