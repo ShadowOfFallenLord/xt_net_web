@@ -9,11 +9,16 @@ namespace Task_6.DAL
 {
     static class DefaultImageKeeper
     {
+        public static int Width { get; private set; }
+        public static int Height { get; private set; }
         public static byte[] DefaultImage { get; private set; }
+        public static ImageKeeper Keeper { get; private set; }
 
         static DefaultImageKeeper()
         {
-            using (Bitmap img = new Bitmap(165, 50))
+            Width = 165;
+            Height = 50;
+            using (Bitmap img = new Bitmap(Width, Height))
             {
                 using (Graphics g = Graphics.FromImage(img))
                 {
@@ -25,7 +30,8 @@ namespace Task_6.DAL
                     ImageConverter converter = new ImageConverter();
                     DefaultImage = (byte[])converter.ConvertTo(img, typeof(byte[]));
                 }
-            }            
+            }
+            Keeper = new ImageKeeper(Width, Height, DefaultImage);
         }
     }
 }

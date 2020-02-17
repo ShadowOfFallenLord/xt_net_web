@@ -4,6 +4,6 @@
     {
         int ID { get; }
         string Title { get; }
-        byte[] Image { get; }
+        IImageKeeper Image { get; }
     }
 }

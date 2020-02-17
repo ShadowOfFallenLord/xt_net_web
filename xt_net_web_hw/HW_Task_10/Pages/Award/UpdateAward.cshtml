@@ -30,7 +30,16 @@
             }
             else
             {
-                LogicKeeper.Logic.UpdateAward(award, title);
+                WebImage image = WebImage.GetImageFromRequest();
+                if (image == null)
+                {
+                    LogicKeeper.Logic.UpdateAward(award, title);
+                }
+                else
+                {
+                    LogicKeeper.Logic.UpdateAward(award, title, 
+                        image.GetBytes(), image.Width, image.Height);
+                }
                 Response.Redirect("~/Pages/LookAwards.cshtml");
             }
         }
@@ -39,12 +48,16 @@
 
 @if (!is_error)
 {
-    <form action="~/Pages/Award/UpdateAward.cshtml" method="post">
+    <form action="~/Pages/Award/UpdateAward.cshtml" method="post" enctype="multipart/form-data">
         ID:
         <input type="text" name="id" value="@award.ID" readonly />
         <br />
         Title:
         <input type="text" name="title" value="@award.Title" />
+        <br />
+        Image
+        <br />
+        <input type="file" name="image_input" accept="image/*,image/jpeg" />
         <br />
         <input type="submit" value="Update" />
     </form>

@@ -22,16 +22,37 @@ namespace HW_Task_10.Content
             else
             {
                 ImageConverter converter = new ImageConverter();
-                using (var buffer = new MemoryStream(LogicKeeper.Logic.GetUserInfo(id).Image))
+                using (var buffer = new MemoryStream(LogicKeeper.Logic.GetUserInfo(id).Image.Content))
                 {
                     using (Bitmap image = new Bitmap(buffer))
                     {
                         Response.ContentType = "image/png";
 
-                        MemoryStream mem = new MemoryStream();
-                        image.Save(mem, System.Drawing.Imaging.ImageFormat.Png);
+                        double mult = 1;
+                        if (image.Width > image.Height)
+                        {
+                            mult = LogicKeeper.ImageWidth * 1.0 / image.Width;
+                        }
+                        else
+                        {
+                            mult = LogicKeeper.ImageHeight * 1.0 / image.Height;
+                        }
 
-                        mem.WriteTo(Response.OutputStream);
+                        float w = (float)(image.Width * mult);
+                        float h = (float)(image.Height * mult);
+
+                        using (Bitmap res = new Bitmap((int)(w + 1), (int)(h + 1)))
+                        {
+                            using (Graphics g = Graphics.FromImage(res))
+                            {
+                                g.DrawImage(image, 0, 0, w, h);
+                            }
+
+                            MemoryStream mem = new MemoryStream();
+                            res.Save(mem, System.Drawing.Imaging.ImageFormat.Png);
+
+                            mem.WriteTo(Response.OutputStream);
+                        }
                     }
                 }
             }

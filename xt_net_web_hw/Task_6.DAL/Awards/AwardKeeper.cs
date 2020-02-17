@@ -68,5 +68,7 @@ namespace Task_6.DAL.Awards
             awards.RemoveAt(award.ID);
             return true;
         }
+
+        public int Count { get => awards.Count; }
     }
 }

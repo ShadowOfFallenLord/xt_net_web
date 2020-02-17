@@ -45,6 +45,7 @@
     <Compile Include="IAward.cs" />
     <Compile Include="IAwardKeeper.cs" />
     <Compile Include="IAwardsPool.cs" />
+    <Compile Include="IImageKeeper.cs" />
     <Compile Include="IUser.cs" />
     <Compile Include="IUserDataBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

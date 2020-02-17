@@ -7,7 +7,7 @@
 // </автоматически создаваемое>
 //------------------------------------------------------------------------------
 
-namespace HW_Task_10_1.Content {
+namespace HW_Task_10.Content {
     
     
     public partial class AwardImage {

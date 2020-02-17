@@ -12,15 +12,20 @@ namespace Task_6.DAL.Awards
     [JsonObject]
     public class Award : IAward
     {
+        [JsonProperty("ID")]
         public int ID { get; set; }
+        [JsonProperty("Title")]
         public string Title { get; set; }
-        public byte[] Image { get; set; }
+        [JsonProperty("ImageKeeperInAward")]
+        public ImageKeeper image;
+        [JsonIgnore]
+        public IImageKeeper Image { get => image; }
 
         public Award(int id, string title)
         {
             ID = id;
             Title = title;
-            Image = DefaultImageKeeper.DefaultImage;
+            image = DefaultImageKeeper.Keeper;
         }
     }
 }

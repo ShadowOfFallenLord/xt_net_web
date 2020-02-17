@@ -14,6 +14,6 @@ namespace Task_6.Interfaces
         DateTime DateOfBirth { get; }
         int Age { get; }
         IAwardsPool Awards { get; }
-        byte[] Image { get;  }
+        IImageKeeper Image { get;  }
     }
 }

@@ -19,7 +19,10 @@ namespace Task_6.DAL.Users
         private AwardsPool awards_pool;
         [JsonIgnore]
         public IAwardsPool Awards { get => awards_pool; }
-        public byte[] Image { get; set; }
+        [JsonProperty("ImageKeeperInUser")]
+        public ImageKeeper image;
+        [JsonIgnore]
+        public IImageKeeper Image { get => image; }
 
         public User(int id, string name, DateTime dob, int age, params IAward[] awards)
         {
@@ -28,7 +31,7 @@ namespace Task_6.DAL.Users
             DateOfBirth = dob;
             Age = age;
             awards_pool = new AwardsPool(awards);
-            Image = DefaultImageKeeper.DefaultImage;
+            image = DefaultImageKeeper.Keeper;
         }
     }
 }

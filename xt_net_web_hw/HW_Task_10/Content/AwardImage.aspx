@@ -1,4 +1,7 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="AwardImage.aspx.cs" Inherits="HW_Task_10_1.Content.AwardImage" %>
+﻿<%@ Page Language="C#" 
+    AutoEventWireup="true" 
+    CodeBehind="AwardImage.aspx.cs" 
+    Inherits="HW_Task_10.Content.AwardImage" %>
 
 <!DOCTYPE html>
 

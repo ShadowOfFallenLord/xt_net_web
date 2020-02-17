@@ -73,6 +73,15 @@ namespace Task_6.BLL
             return true;
         }
 
+        public bool UpdateUser(IUser in_user, string name, DateTime date, byte[] new_image, int w, int h)
+        {
+            User user = in_user as User;
+            user.Name = name;
+            user.DateOfBirth = date;
+            user.image = new ImageKeeper(w, h, new_image);
+            return true;
+        }
+
         public bool AddUser(string name, DateTime dob, int age)
         {
             return data_base.UserDataBase.Add(name, dob, age);
@@ -117,6 +126,8 @@ namespace Task_6.BLL
             return data_base.AwardKeeper.GetAwardsList();
         }
 
+        public int AwardCount { get => data_base.AwardKeeper.Count; }
+
         public bool ContainsAward(int id)
         {
             return data_base.AwardKeeper.ContainsAward(id);
@@ -141,6 +152,14 @@ namespace Task_6.BLL
         {
             Award award = in_award as Award;
             award.Title = title;
+            return true;
+        }
+
+        public bool UpdateAward(IAward in_award, string title, byte[] new_image, int w, int h)
+        {
+            Award award = in_award as Award;
+            award.Title = title;
+            award.image = new ImageKeeper(w, h, new_image);
             return true;
         }
 

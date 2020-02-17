@@ -27,7 +27,6 @@
     {
         user = LogicKeeper.Logic.GetUserInfo(id);
 
-
         if (IsPost)
         {
             if (name == null || name.Length < 1)
@@ -43,7 +42,16 @@
 
             if (!name_fail && !date_fail)
             {
-                update_fail = !LogicKeeper.Logic.UpdateUser(user, name, date);
+                WebImage image = WebImage.GetImageFromRequest();
+                if (image == null)
+                {
+                    update_fail = !LogicKeeper.Logic.UpdateUser(user, name, date);
+                }
+                else
+                {
+                    update_fail = !LogicKeeper.Logic.UpdateUser(user, name, date, 
+                        image.GetBytes(), image.Width, image.Height);
+                }
             }
 
             if (!update_fail)
@@ -91,7 +99,7 @@
     }
     else
     {
-        <form action="~/Pages/User/UpdateUser.cshtml" method="post">
+        <form action="~/Pages/User/UpdateUser.cshtml" method="post" enctype="multipart/form-data">
             User info:
             <br />
             ID:
@@ -104,6 +112,10 @@
             Date of Birth:
             <br />
             <input type="date" name="dob_input" value="@date_str" />
+            <br />
+            Image
+            <br />
+            <input type="file" name="image_input" accept="image/*,image/jpeg"/>
             <br />
             <input type="submit" value="Update" />
         </form>

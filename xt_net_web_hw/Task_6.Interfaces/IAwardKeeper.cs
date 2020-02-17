@@ -14,5 +14,6 @@ namespace Task_6.Interfaces
         bool ContainsAward(string title);
         bool ContainsAward(int id);
         bool RemoveAward(int id);
+        int Count { get; }
     }
 }
