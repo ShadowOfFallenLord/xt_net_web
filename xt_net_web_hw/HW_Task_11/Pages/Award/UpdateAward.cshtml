@@ -1,0 +1,82 @@
+﻿@using HW_Task_11;
+@using Task_11.Entities.Interfaces;
+@{
+    Layout = "~/Layouts/_MainLayout.cshtml";
+
+    int id = -1;
+    bool is_error = false;
+
+    if (!int.TryParse(Request["id"], out id) || !LogicKeeper.Logic.ContainsAward(id))
+    {
+        is_error = true;
+    }
+
+    IAward award = null;
+    string title = null;
+    bool title_error = false;
+
+    if (!is_error)
+    {
+        award = LogicKeeper.Logic.GetAward(id);
+
+        if (IsPost)
+        {
+            title = Request["title"];
+
+            if (title == null || title.Length < 1)
+            {
+                is_error = true;
+                title_error = true;
+            }
+            else
+            {
+                WebImage image = WebImage.GetImageFromRequest();
+                if (image == null)
+                {
+                    LogicKeeper.Logic.UpdateAward(award.ID, title);
+                }
+                else
+                {
+                    LogicKeeper.Logic.UpdateAward(award.ID, title, image.GetBytes());
+                }
+                Response.Redirect("~/Pages/AwardsList.cshtml");
+            }
+        }
+    }
+}
+
+@if (!is_error)
+{
+    <form action="~/Pages/Award/UpdateAward.cshtml" method="post" enctype="multipart/form-data">
+        ID:
+        <input type="text" name="id" value="@award.ID" readonly />
+        <br />
+        Title:
+        <input type="text" name="title" value="@award.Title" />
+        <br />
+        Image
+        <br />
+        <input type="file" name="image_input" accept="image/*,image/jpeg" />
+        <br />
+        <input type="submit" value="Update" />
+    </form>
+}
+else
+{
+    if (title_error)
+    {
+        @:"
+        @title
+        @:" is not correct title!
+    }
+    else
+    {
+        @:Incorrect ID. Award not found :c
+    }
+}
+<br />
+<br />
+<a href="~/Pages/AwardsList.cshtml">
+    - Back
+</a>
+

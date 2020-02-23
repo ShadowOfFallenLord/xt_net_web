@@ -1,0 +1,79 @@
+﻿@using HW_Task_11;
+@{
+    Layout = "~/Layouts/_MainLayout.cshtml";
+    Page.Title = "AddUsers";
+
+    bool name_fail = false;
+    bool date_fail = false;
+    bool add_fail = true;
+
+    string name = Request["name_input"];
+    string str_date = Request["dob_input"];
+
+    if (IsPost)
+    {
+        if (name == null || name.Length < 1)
+        {
+            name_fail = true;
+        }
+
+        DateTime date = DateTime.MinValue;
+        if (str_date == null || str_date.Length < 1 || !DateTime.TryParse(str_date, out date))
+        {
+            date_fail = true;
+        }
+
+        if (!name_fail && !date_fail)
+        {
+            add_fail = !LogicKeeper.Logic.AddUser(name, date);
+        }
+
+        if (!add_fail)
+        {
+            Response.Redirect("~/Pages/UsersList.cshtml");
+        }
+    }
+}
+
+@if (!IsPost)
+{
+    <form action="~/Pages/User/AddUser.cshtml" method="post">
+        Name:
+        <br />
+        <input type="text" name="name_input" />
+        <br />
+        Date of birth:
+        <br />
+        <input type="date" name="dob_input" />
+        <br />
+        <input type="submit" value="Создать" />
+    </form>
+}
+else
+{
+    @:User don't added!
+    <br />
+    if (name_fail)
+    {
+        @:"
+        @name
+        @:" is not correct name!
+        <br />
+    }
+
+    if (date_fail)
+    {
+        @:"
+        @str_date
+        @:" is not correct date!
+        <br />
+    }
+
+    @:You can try again.
+    <br />
+    <br />
+    <a href="~/Pages/UsersList.cshtml">
+        - Back
+    </a>
+}
+

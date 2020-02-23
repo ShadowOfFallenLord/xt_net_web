@@ -1,0 +1,60 @@
+﻿@using HW_Task_11;
+@{
+    Layout = "~/Layouts/_MainLayout.cshtml";
+
+    string title = null;
+    bool title_error = false;
+    bool has_already = false;
+
+    if (IsPost)
+    {
+        title = Request["title"];
+
+        if (title == null || title.Length < 1)
+        {
+            title_error = true;
+        }
+        else
+        {
+            if (LogicKeeper.Logic.ContainsAward(title))
+            {
+                title_error = true;
+                has_already = true;
+            }
+            else
+            {
+                LogicKeeper.Logic.AddAward(title);
+                Response.Redirect("~/Pages/AwardsList.cshtml");
+            }
+        }
+    }
+}
+
+@if (!title_error)
+{
+    <form action="~/Pages/Award/AddAward.cshtml" method="post">
+        Title:
+        <input type="text" name="title" />
+        <br />
+        <input type="submit" value="Add" />
+    </form>
+}
+else
+{   @:"
+    @title
+    @:"
+    if (has_already)
+    {
+        @:already exists!
+    }
+    else
+    {
+        @:is not correct title!
+    }
+}
+<br />
+<br />
+<a href="~/Pages/AwardsList.cshtml">
+    - Back
+</a>
+

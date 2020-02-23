@@ -1,0 +1,68 @@
+﻿@using HW_Task_11;
+@using Task_11.Entities.Interfaces;
+
+@{
+    Layout = "~/Layouts/_MainLayout.cshtml";
+    Page.Title = "AddAward";
+
+    int id = -1;
+    bool is_error = false;
+    IAward[] awards = null;
+
+    if (!int.TryParse(Request["id"], out id) || id < 1)
+    {
+        is_error = true;
+    }
+
+    if (!is_error)
+    {
+        string str_award_id = Request["award_id"];
+        if (str_award_id != null)
+        {
+            int award_id = -1;
+            if (!int.TryParse(str_award_id, out award_id) || id < 1 || !LogicKeeper.Logic.ContainsAward(award_id))
+            {
+                is_error = true;
+            }
+            else
+            {
+                LogicKeeper.Logic.AddAwardToUser(id, award_id);
+                Response.Redirect($"~/Pages/User/UserPage.cshtml?id={id}");
+            }
+        }
+        else
+        {
+            awards = LogicKeeper.Logic.GetAllAwards();
+        }
+    }
+}
+
+@if (!is_error)
+{
+    @:Choise award:
+    <br />
+    foreach (IAward award in awards)
+    {
+        <br />
+        <a href="~/Pages/UserAwards/AddExistingAwardToUser.cshtml?id=@id&award_id=@award.ID">
+            @("-")
+            @award.ID
+            @(")")
+            @award.Title
+        </a>
+    }
+    <br />
+    <br />
+    <a href="~/Pages/User/UserPage.cshtml?id=@id">
+        - Back
+    </a>
+}
+else
+{
+    @: Incorrect ID! :c
+    <br />
+    <br />
+    <a href="~/Pages/UsersList.cshtml">
+        - Back
+    </a>
+}

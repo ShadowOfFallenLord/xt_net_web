@@ -1,0 +1,12 @@
+﻿@{
+    Layout = "~/Layouts/_MainLayout.cshtml";
+    Page.Title = "LogOut";
+
+    FormsAuthentication.SignOut();
+    Response.Redirect("~/index.cshtml");
+}
+
+
+<a href="~/index.cshtml">
+    - Back
+</a>

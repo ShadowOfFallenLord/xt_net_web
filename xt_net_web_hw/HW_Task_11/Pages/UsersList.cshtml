@@ -1,0 +1,26 @@
+﻿@using HW_Task_11;
+@using Task_11.Entities.Interfaces;
+@{
+    Layout = "~/Layouts/_MainLayout.cshtml";
+    Page.Title = "UserList";
+    IUser[] users = LogicKeeper.Logic.GetAllUsers();
+}
+
+<a href="~/Pages/User/AddUser.cshtml">
+    - Add user
+</a>
+<br />
+DataBase contains @users.Length users.
+<br />
+@foreach (IUser user in users)
+{
+    <a href="~/Pages/User/UserPage?id=@user.ID">
+        - @user.Name
+    </a>
+    <br />
+}
+<br />
+<br />
+<a href="~/index.cshtml">
+    - Back
+</a>

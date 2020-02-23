@@ -1,0 +1,94 @@
+﻿@using HW_Task_11;
+@{
+    Layout = null;
+    string user_name = Request["user_name"];
+    string user_password = Request["user_password"];
+    bool is_error = false;
+    bool is_error_name = false;
+    bool is_error_pass = false;
+    AuthResult auth_result = AuthResult.Correct;
+
+    if (IsPost)
+    {
+        if (user_name == null || user_name.Length < 1)
+        {
+            is_error = true;
+            is_error_name = true;
+        }
+
+        if (user_password == null || user_password.Length < 1)
+        {
+            is_error = true;
+            is_error_pass = true;
+        }
+
+        if (!is_error)
+        {
+            auth_result = LogicKeeper.RoleProvider.AuthUser(user_name, user_password);
+            if (auth_result == AuthResult.Correct)
+            {
+                FormsAuthentication.SetAuthCookie(user_name, true);
+                Response.Redirect("~/index.cshtml");
+            }
+        }
+    }
+}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>LogIn</title>
+</head>
+<body>
+    <div>
+        @if (IsPost)
+        {
+            if (is_error_name)
+            {
+                @:"
+                @user_name
+                @:" is not correct name!
+                <br />
+            }
+
+            if (is_error_pass)
+            {
+                @:"
+                @user_password
+                @:" is not correct password!
+            }
+
+            if (auth_result == AuthResult.IncorrectLogin)
+            {
+                @: User "
+                @user_name
+                @:" not found!
+            }
+
+            if (auth_result == AuthResult.IncorrectPass)
+            {
+                @: Invalid password!
+            }
+        }
+        else
+        {
+            <form action="~/Pages/Roles/LogIn.cshtml" method="post">
+                Login:
+                <br />
+                <input type="text" name="user_name" value="@user_name" />
+                <br />
+                Password:
+                <br />
+                <input type="password" name="user_password" value="@user_password" />
+                <br />
+                <input type="submit" value="LogIn" />
+            </form>
+        }
+        <br />
+        <br />
+        <a href="~/index.cshtml">
+            - Back
+        </a>
+    </div>
+</body>
+</html>

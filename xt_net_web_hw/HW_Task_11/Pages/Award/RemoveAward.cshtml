@@ -1,0 +1,25 @@
+﻿@using HW_Task_11;
+@{
+    Layout = "~/Layouts/_MainLayout.cshtml";
+
+    int id = -1;
+    bool is_error = false;
+
+    if (!int.TryParse(Request["id"], out id) || !LogicKeeper.Logic.ContainsAward(id))
+    {
+        is_error = true;
+    }
+
+    if (!is_error)
+    {
+        LogicKeeper.Logic.RemoveAward(id);
+        Response.Redirect("~/Pages/AwardsList.cshtml");
+    }
+}
+
+Incorrect ID! Award not found :c
+<br />
+<br />
+<a href="~/Pages/AwardsList.cshtml">
+    - Back
+</a>

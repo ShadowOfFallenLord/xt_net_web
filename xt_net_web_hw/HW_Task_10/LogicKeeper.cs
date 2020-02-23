@@ -15,6 +15,6 @@ namespace HW_Task_10
             "Program\\Git\\xt_net_web\\xt_net_web_hw\\HW_Task_10\\Content\\data.base");
         // I don't want create files in IIS folder
         // Set folder that is convenient for you
-        // With data base file name at end.
+        // With data base file name at end. */
     }
 }

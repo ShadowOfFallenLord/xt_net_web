@@ -1,0 +1,135 @@
+﻿@using HW_Task_11;
+@using Task_11.Entities.Interfaces;
+@{
+    Layout = "~/Layouts/_MainLayout.cshtml";
+    Page.Title = "UserPages";
+
+    int id = -1;
+    bool is_error = false;
+
+    if (!int.TryParse(Request["id"], out id) || id < 1)
+    {
+        is_error = true;
+    }
+
+    IUser user = null;
+
+    string date_str = "";
+
+    bool name_fail = false;
+    bool date_fail = false;
+    bool update_fail = true;
+
+    string name = Request["name_input"];
+    string str_date = Request["dob_input"];
+
+    if (!is_error)
+    {
+
+        if (IsPost)
+        {
+            if (name == null || name.Length < 1)
+            {
+                name_fail = true;
+            }
+
+            DateTime date = DateTime.MinValue;
+            if (str_date == null || str_date.Length < 1 || !DateTime.TryParse(str_date, out date))
+            {
+                date_fail = true;
+            }
+
+            if (!name_fail && !date_fail)
+            {
+                WebImage image = WebImage.GetImageFromRequest();
+                if (image == null)
+                {
+                    update_fail = !LogicKeeper.Logic.UpdateUser(id, name, date);
+                }
+                else
+                {
+                    update_fail = !LogicKeeper.Logic.UpdateUser(id, name, date, image.GetBytes());
+                }
+            }
+
+            if (!update_fail)
+            {
+                Response.Redirect($"~/Pages/User/UserPage.cshtml?id={id}");
+            }
+        }
+        else
+        {
+            user = LogicKeeper.Logic.GetUserInfo(id);
+            string[] t = $"{user.DateOfBirth:d}".Split('.');
+            date_str = $"{t[2]}-{t[1]}-{t[0]}";
+        }
+    }
+}
+
+
+@if (!is_error)
+{
+    if (IsPost)
+    {
+        @:User don't updated!
+        <br />
+        if (name_fail)
+        {
+            @:"
+            @name
+            @:" is not correct name!
+            <br />
+        }
+
+        if (date_fail)
+        {
+            @:"
+            @str_date
+            @:" is not correct date!
+            @:<br />
+        }
+
+        @:You can try again.
+        @:<br />
+        <br />
+        <a href="~/Pages/LookUsers.cshtml">
+            - Back
+        </a>
+    }
+    else
+    {
+        <form action="~/Pages/User/UpdateUser.cshtml" method="post" enctype="multipart/form-data">
+            User info:
+            <br />
+            ID:
+            <input type="text" value="@user.ID" name="id" readonly />
+            <br />
+            Name:
+            <br />
+            <input type="text" name="name_input" value="@user.Name" />
+            <br />
+            Date of Birth:
+            <br />
+            <input type="date" name="dob_input" value="@date_str" />
+            <br />
+            Image
+            <br />
+            <input type="file" name="image_input" accept="image/*,image/jpeg" />
+            <br />
+            <input type="submit" value="Update" />
+        </form>
+        <br />
+        <a href="~/Pages/User/UserPage.cshtml?id=@id">
+            - Back
+        </a>
+    }
+}
+else
+{
+    @: Incorrect ID! User not found :c
+    <br />
+    <br />
+    <a href="~/Pages/UsersList.cshtml">
+        - Back
+    </a>
+}

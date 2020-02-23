@@ -1,0 +1,35 @@
+﻿@using HW_Task_11;
+@using Task_11.Entities.Interfaces;
+@{
+    Layout = "~/Layouts/_MainLayout.cshtml";
+    Page.Title = "AwardList";
+    IAward[] awards = LogicKeeper.Logic.GetAllAwards();
+}
+
+<a href="~/Pages/Award/AddAward.cshtml">
+    - Add award
+</a>
+<br />
+DataBase contains @awards.Length awards.
+<br />
+@foreach (IAward award in awards)
+{
+    @:-
+    @award.ID
+    @:)
+    @award.Title
+    <a href="~/Pages/Award/UpdateAward.cshtml?id=@award.ID">
+        (update)
+    </a>
+    <a href="~/Pages/Award/RemoveAward.cshtml?id=@award.ID">
+        (remove)
+    </a>
+    <br />
+    <img src="~/Content/AwardImage.aspx?id=@award.ID">
+    <br />
+}
+<br />
+<br />
+<a href="~/index.cshtml">
+    - Back
+</a>

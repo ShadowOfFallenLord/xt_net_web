@@ -1,0 +1,59 @@
+﻿@using HW_Task_11;
+
+@{
+    Layout = "~/Layouts/_MainLayout.cshtml";
+    Page.Title = "AddAward";
+
+    int id = -1;
+    bool is_error = false;
+
+    if (!int.TryParse(Request["id"], out id) || id < 1)
+    {
+        is_error = true;
+    }
+
+    string award_title = Request["name"];
+    if(!is_error && award_title != null)
+    {
+        LogicKeeper.Logic.AddAwardToUser(id, award_title);
+        Response.Redirect($"~/Pages/User/UserPage.cshtml?id={id}");
+    }
+}
+
+@if (!is_error)
+{
+    <input type="text" id="award_title" />
+    <button id="btn_send">
+        Добавить
+    </button>
+    <script>
+        var inputer = document.getElementById('award_title');
+        function send_title()
+        {
+            var name = inputer.value;
+            if (name.length < 1)
+            {
+                alert('Award title can not be empty!');
+            }
+            else
+            {
+                location.href = '/Pages/UserAwards/AddNewAwardToUser.cshtml?id=' + @id.ToString() + '&name=' + name;
+            }
+        }
+        document.getElementById('btn_send').addEventListener('click', send_title);
+    </script>
+    <br />
+    <br />
+    <a href="~/Pages/User/UserPage.cshtml?id=@id">
+        - Back
+    </a>
+}
+else
+{
+    @: Incorrect ID! :c
+    <br />
+    <br />
+    <a href="~/Pages/UsersList.cshtml">
+        - Back
+    </a>
+}

@@ -1,0 +1,39 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@Page.Title</title>
+</head>
+<body>
+    <div>
+        @if(!User.Identity.IsAuthenticated)
+        {
+            @:Hello, Guest!
+            <a href="~/Pages/Roles/LogIn.cshtml">
+                LogIn
+            </a>
+            <a href="~/Pages/Roles/Register.cshtml">
+                Register
+            </a>
+        }
+        else
+        {
+            @:Hello,
+            @User.Identity.Name
+            @:!
+            <a href="~/Pages/Roles/LogOut.cshtml">
+                LogOut
+            </a>
+        }
+    </div>
+    <br />
+    <div>
+        @RenderBody()
+    </div>
+</body>
+</html>

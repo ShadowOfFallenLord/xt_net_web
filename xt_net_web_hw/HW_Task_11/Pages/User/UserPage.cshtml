@@ -1,0 +1,102 @@
+﻿@using HW_Task_11;
+@using Task_11.Entities.Interfaces;
+@{
+    Layout = "~/Layouts/_MainLayout.cshtml";
+    Page.Title = "User";
+
+    int id = -1;
+    bool is_error = false;
+
+    if (!int.TryParse(Request["id"], out id) || id < 1)
+    {
+        is_error = true;
+    }
+
+    IUser user = null;
+    IAward[] awards = null;
+    if (!is_error)
+    {
+        user = LogicKeeper.Logic.GetUserInfo(id);
+
+        if (user == null)
+        {
+            is_error = true;
+        }
+        else
+        {
+            awards = LogicKeeper.Logic.GetUserAwards(user.ID);
+        }
+    }
+}
+
+@if (!is_error)
+{
+    @:User info:
+    <br />
+    @:ID:
+    @user.ID
+    <br />
+    @:Name:
+    @user.Name
+    <br />
+    @:Date of Birth:
+    @($"{user.DateOfBirth:d}")
+    <br />
+    @:Age:
+    @user.Age
+    <br />
+    <img src="~/Content/UserImage.aspx?id=@user.ID">
+    <br />
+    @:Awards:
+    if (awards == null || awards.Length < 1)
+    {
+        @: have not awards.
+    }
+    else
+    {
+        foreach (IAward award in awards)
+        {
+            <br />
+            @:-
+            @award.ID
+            @: :
+            @award.Title
+            <a href="~/Pages/UserAwards/RemoveAwardFromUser.cshtml?id=@id&award_id=@award.ID">
+                (remove)
+            </a>
+            <br />
+            <img src="~/Content/AwardImage.aspx?id=@award.ID">
+        }
+    }
+
+    <br />
+    <br />
+    <a href="~/Pages/User/UpdateUser.cshtml?id=@user.ID">
+        - Update
+    </a>
+    <br />
+    <a href="~/Pages/UserAwards/AddExistingAwardToUser.cshtml?id=@user.ID">
+        - Add existing award
+    </a>
+    <br />
+    <a href="~/Pages/UserAwards/AddNewAwardToUser.cshtml?id=@user.ID">
+        - Add new award
+    </a>
+    <br />
+    <a href="~/Pages/User/RemoveUser.cshtml?id=@user.ID">
+        - Remove
+    </a>
+    <br />
+    <a href="~/Pages/UsersList.cshtml">
+        - Back
+    </a>
+}
+else
+{
+    @: Incorrect ID! User not found :c
+    <br />
+    <br />
+    <a href="~/Pages/UsersList.cshtml">
+        - Back
+    </a>
+}
