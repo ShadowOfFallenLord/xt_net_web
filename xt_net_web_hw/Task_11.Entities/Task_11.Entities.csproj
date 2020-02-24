@@ -42,10 +42,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\AuthResult.cs" />
     <Compile Include="Implementation\Award.cs" />
+    <Compile Include="Implementation\Client.cs" />
     <Compile Include="Implementation\DefaultImage.cs" />
     <Compile Include="Implementation\EntitieImage.cs" />
     <Compile Include="Interfaces\IAward.cs" />
+    <Compile Include="Interfaces\IClient.cs" />
     <Compile Include="Interfaces\IEntitieImage.cs" />
     <Compile Include="Interfaces\IUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

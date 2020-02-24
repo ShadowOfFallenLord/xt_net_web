@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Task_11.DAL.Interfaces;
 using Task_11.DAL.Implementation;
 using Task_11.Entities.Interfaces;
+using Task_11.Entities.Enums;
 
 namespace Task_11.BLL
 {
@@ -15,12 +16,14 @@ namespace Task_11.BLL
         private IUserDao users_dao;
         private IAwardDao award_dao;
         private IUserAwardsDao user_awards_dao;
+        private IClientDao client_dao;
 
         public DBLogic()
         {
             users_dao = new UserDao(connection_string);
             award_dao = new AwardDao(connection_string);
             user_awards_dao = new UserAwardsDao(connection_string);
+            client_dao = new ClientDao(connection_string);
         }
 
         #region USER_METHODS
@@ -148,6 +151,37 @@ namespace Task_11.BLL
         public bool RemoveAwardFromAll(int award_id)
         {
             return user_awards_dao.RemoveAwardFromAll(award_id);
+        }
+        #endregion
+        #region CLIENT_METHODS
+        public IClient[] GetAllClients()
+        {
+            return client_dao.GetAllClients();
+        }
+
+        public string[] GetRolesForClient(string user_name)
+        {
+            return client_dao.GetRolesForClient(user_name);
+        }
+
+        public int GetClientID(string user_name)
+        {
+            return client_dao.GetClientID(user_name);
+        }
+
+        public bool SetRoleToClient(int user_id, bool set_admin = false)
+        {
+            return client_dao.SetRoleToClient(user_id, set_admin);
+        }
+
+        public bool AddNewClient(string user_name, string user_pass)
+        {
+            return client_dao.AddNewClient(user_name, user_pass);
+        }
+
+        public AuthResult AuthClient(string user_name, string user_pass)
+        {
+            return client_dao.AuthClient(user_name, user_pass);
         }
         #endregion
     }

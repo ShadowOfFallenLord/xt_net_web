@@ -1,12 +1,21 @@
 ﻿@{
     Layout = "~/Layouts/_MainLayout.cshtml";
     Page.Title = "Main";
+
+    bool is_auth = User.Identity.IsAuthenticated;
 }
 
 <a href="~/Pages/UsersList.cshtml">
     - Look Users
 </a>
-<br />
-<a href="~/Pages/AwardsList.cshtml">
-    - Look Awards
-</a>
+@if (is_auth && User.IsInRole("Admin"))
+{
+    <br />
+    <a href="~/Pages/AwardsList.cshtml">
+        - Look Awards
+    </a>
+    <br />
+    <a href="~/Pages/ClientsList.cshtml">
+        - Look Clients
+    </a>
+}

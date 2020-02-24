@@ -1,0 +1,99 @@
+﻿@using HW_Task_11;
+@{
+    Layout = null;
+
+    string user_name = Request["login"];
+    string user_pass = Request["password"];
+
+    bool is_error = false;
+    bool is_login_error = false;
+    bool is_pass_error = false;
+
+    bool has_login_in_data_base = false;
+
+    if(IsPost)
+    {
+        if(user_name == null || user_name.Length < 1)
+        {
+            is_error = true;
+            is_login_error = true;
+        }
+
+        if(user_pass == null || user_pass.Length < 1)
+        {
+            is_error = true;
+            is_pass_error = true;
+        }
+
+        if(!is_error)
+        {
+            if(LogicKeeper.Logic.GetClientID(user_name) > 0)
+            {
+                is_error = true;
+                has_login_in_data_base = true;
+            }
+            else
+            {
+                LogicKeeper.Logic.AddNewClient(user_name, user_pass);
+                FormsAuthentication.SetAuthCookie(user_name, true);
+                Response.Redirect("~/index.cshtml");
+            }
+        }
+    }
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Register</title>
+</head>
+<body>
+    <div>
+        @if (is_error)
+        {
+            if (is_login_error)
+            {
+                @:"
+                @user_name
+                @:" is not correct login!
+                <br />
+            }
+
+            if (is_pass_error)
+            {
+                @:"
+                @user_pass
+                @:" is not correct password!
+                <br />
+            }
+
+            if (has_login_in_data_base)
+            {
+                @:User "
+                @user_name
+                @:" has already exist!
+                <br />
+            }
+        }
+
+        <form action="~/Pages/Roles/Register.cshtml" method="post">
+            Login:
+            <br />
+            <input type="text" name="login" value="@user_name" />
+            <br />
+            Password:
+            <br />
+            <input type="text" name="password" value="@user_pass" />
+            <br />
+            <input type="submit" value="Register" />
+        </form>
+        <br />
+        <br />
+        <a href="~/index.cshtml">
+            - Back
+        </a>
+    </div>
+</body>
+</html>

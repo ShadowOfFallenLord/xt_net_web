@@ -11,26 +11,35 @@
 </head>
 <body>
     <div>
-        @if(!User.Identity.IsAuthenticated)
+        @if (!User.Identity.IsAuthenticated)
         {
-            @:Hello, Guest!
-            <a href="~/Pages/Roles/LogIn.cshtml">
-                LogIn
-            </a>
-            <a href="~/Pages/Roles/Register.cshtml">
-                Register
-            </a>
+            <div style="float: left">
+                Hello, Guest!
+            </div>
+            <div style="float: right; margin-right: 10px">
+                <a href="~/Pages/Client/Register.cshtml">
+                    Register
+                </a>
+            </div>
+            <div style="float: right; margin-right: 10px">
+                <a href="~/Pages/Client/LogIn.cshtml">
+                    LogIn
+                </a>
+            </div>
         }
         else
         {
-            @:Hello,
-            @User.Identity.Name
-            @:!
-            <a href="~/Pages/Roles/LogOut.cshtml">
-                LogOut
-            </a>
+            <div style="float: left">
+                Hello, @User.Identity.Name!
+            </div>
+            <div style="float: right; margin-right: 10px">
+                <a href="~/Pages/Client/LogOut.cshtml">
+                    LogOut
+                </a>
+            </div>
         }
     </div>
+    <br />
     <br />
     <div>
         @RenderBody()

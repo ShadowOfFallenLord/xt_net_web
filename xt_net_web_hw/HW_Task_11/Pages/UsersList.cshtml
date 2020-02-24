@@ -4,22 +4,37 @@
     Layout = "~/Layouts/_MainLayout.cshtml";
     Page.Title = "UserList";
     IUser[] users = LogicKeeper.Logic.GetAllUsers();
+
+    bool is_auth = User.Identity.IsAuthenticated;
 }
 
-<a href="~/Pages/User/AddUser.cshtml">
-    - Add user
-</a>
-<br />
-DataBase contains @users.Length users.
-<br />
-@foreach (IUser user in users)
+@if (is_auth && User.IsInRole("Admin"))
 {
-    <a href="~/Pages/User/UserPage?id=@user.ID">
-        - @user.Name
+    <a href="~/Pages/User/AddUser.cshtml">
+        - Add user
     </a>
     <br />
 }
+
+DataBase contains @users.Length users.
 <br />
+
+@foreach (IUser user in users)
+{
+    if (is_auth)
+    {
+        <a href="~/Pages/User/UserPage?id=@user.ID">
+            -@user.Name
+        </a>
+    }
+    else
+    {
+        @:-
+        @user.Name
+    }
+    <br />
+}
+
 <br />
 <a href="~/index.cshtml">
     - Back

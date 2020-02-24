@@ -127,9 +127,11 @@
     <Content Include="Pages\UserAwards\AddExistingAwardToUser.cshtml" />
     <Content Include="Pages\UserAwards\AddNewAwardToUser.cshtml" />
     <Content Include="Pages\UserAwards\RemoveAwardFromUser.cshtml" />
-    <Content Include="Pages\Roles\LogIn.cshtml" />
-    <Content Include="Pages\Roles\LogOut.cshtml" />
-    <Content Include="Pages\Roles\Register.cshtml" />
+    <Content Include="Pages\Client\LogIn.cshtml" />
+    <Content Include="Pages\Client\LogOut.cshtml" />
+    <Content Include="Pages\Client\Register.cshtml" />
+    <Content Include="Pages\ClientsList.cshtml" />
+    <Content Include="Pages\Client\SwichRole.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

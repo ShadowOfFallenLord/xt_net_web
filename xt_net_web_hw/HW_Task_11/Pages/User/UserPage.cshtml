@@ -27,6 +27,8 @@
             awards = LogicKeeper.Logic.GetUserAwards(user.ID);
         }
     }
+
+    bool is_auth = User.Identity.IsAuthenticated;
 }
 
 @if (!is_error)
@@ -61,9 +63,13 @@
             @award.ID
             @: :
             @award.Title
-            <a href="~/Pages/UserAwards/RemoveAwardFromUser.cshtml?id=@id&award_id=@award.ID">
-                (remove)
-            </a>
+
+            if (is_auth && User.IsInRole("Admin"))
+            {
+                <a href="~/Pages/UserAwards/RemoveAwardFromUser.cshtml?id=@id&award_id=@award.ID">
+                    (remove)
+                </a>
+            }
             <br />
             <img src="~/Content/AwardImage.aspx?id=@award.ID">
         }
@@ -71,22 +77,25 @@
 
     <br />
     <br />
-    <a href="~/Pages/User/UpdateUser.cshtml?id=@user.ID">
-        - Update
-    </a>
-    <br />
-    <a href="~/Pages/UserAwards/AddExistingAwardToUser.cshtml?id=@user.ID">
-        - Add existing award
-    </a>
-    <br />
-    <a href="~/Pages/UserAwards/AddNewAwardToUser.cshtml?id=@user.ID">
-        - Add new award
-    </a>
-    <br />
-    <a href="~/Pages/User/RemoveUser.cshtml?id=@user.ID">
-        - Remove
-    </a>
-    <br />
+    if (is_auth && User.IsInRole("Admin"))
+    {
+        <a href="~/Pages/User/UpdateUser.cshtml?id=@user.ID">
+            - Update
+        </a>
+        <br />
+        <a href="~/Pages/UserAwards/AddExistingAwardToUser.cshtml?id=@user.ID">
+            - Add existing award
+        </a>
+        <br />
+        <a href="~/Pages/UserAwards/AddNewAwardToUser.cshtml?id=@user.ID">
+            - Add new award
+        </a>
+        <br />
+        <a href="~/Pages/User/RemoveUser.cshtml?id=@user.ID">
+            - Remove
+        </a>
+        <br />
+    }
     <a href="~/Pages/UsersList.cshtml">
         - Back
     </a>

@@ -1,0 +1,38 @@
+﻿@using HW_Task_11;
+@using Task_11.Entities.Interfaces;
+@{
+    Layout = "~/Layouts/_MainLayout.cshtml";
+    Page.Title = "UserList";
+    IClient[] clients = LogicKeeper.Logic.GetAllClients();
+    string new_role = "";
+}
+
+DataBase contains @clients.Length clients.
+<br />
+@foreach (IClient client in clients)
+{
+    @:-
+    @client.ID
+    @:)
+    @client.Name
+    @:(
+    @client.Role
+    @:)
+    if(client.Role == "User")
+    {
+        new_role = "admin";
+    }
+    else
+    {
+        new_role = "user";
+    }
+    <a href="~/Pages/Client/SwichRole.cshtml?id=@client.ID&role=@new_role">
+        (make @new_role)
+    </a>
+    <br />
+}
+<br />
+<br />
+<a href="~/index.cshtml">
+    - Back
+</a>

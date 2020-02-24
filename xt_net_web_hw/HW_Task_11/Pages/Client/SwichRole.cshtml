@@ -1,0 +1,76 @@
+﻿@using HW_Task_11;
+@{
+    Layout = null;
+
+    bool is_error = false;
+    bool incorrect_user = false;
+    bool incorrect_role = false;
+
+    string id_str = Request["id"];
+    string role_str = Request["role"];
+
+    int id = -1;
+
+    if (!int.TryParse(id_str, out id) || id < 1)
+    {
+        is_error = true;
+        incorrect_user = true;
+    }
+
+    bool set_admin = false;
+
+    switch (role_str)
+    {
+        case "admin":
+            set_admin = true;
+            break;
+        case "user":
+            set_admin = false;
+            break;
+        default:
+            is_error = true;
+            incorrect_role = true;
+            break;
+    }
+
+    if(!is_error)
+    {
+        LogicKeeper.Logic.SetRoleToClient(id, set_admin);
+        Response.Redirect("~/Pages/ClientsList.cshtml");
+    }
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <div>
+        @if (is_error)
+        {
+            if (incorrect_user)
+            {
+                @:"
+                @id_str
+                @:" is incorrect id!
+                <br />
+            }
+
+            if (incorrect_role)
+            {
+                @:"
+                @role_str
+                @:" is incorrect role!
+                <br />
+            }
+        }
+
+        <a href="~/Pages/ClientsList.cshtml">
+            - Back
+        </a>
+    </div>
+</body>
+</html>

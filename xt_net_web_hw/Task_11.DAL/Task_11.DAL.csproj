@@ -42,8 +42,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Implementation\AwardDao.cs" />
+    <Compile Include="Implementation\ClientDao.cs" />
     <Compile Include="Implementation\UserAwardsDao.cs" />
     <Compile Include="Interfaces\IAwardDao.cs" />
+    <Compile Include="Interfaces\IClientDao.cs" />
     <Compile Include="Interfaces\IUserAwardsDao.cs" />
     <Compile Include="Interfaces\IUserDao.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
