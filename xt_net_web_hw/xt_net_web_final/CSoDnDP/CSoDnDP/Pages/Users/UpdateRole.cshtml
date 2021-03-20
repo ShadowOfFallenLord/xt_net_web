@@ -1,0 +1,19 @@
+﻿@using CSoDnDP.Model;
+@{
+    Layout = "~/Layouts/_AuthLayout.cshtml";
+    if (User.IsInRole("Admin"))
+    {
+        int id = -1;
+        if (int.TryParse(Request["id"], out id))
+        {
+            string role = Request["role"];
+            if (role != null)
+            {
+                LogicKeeper.Logic.User.SetUserRole(id, role);
+                Response.Redirect("~/Pages/UsersList.cshtml");
+            }
+        }
+    }
+}
+
+Error 

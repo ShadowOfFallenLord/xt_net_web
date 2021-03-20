@@ -1,0 +1,14 @@
+﻿@using CSoDnDP.Model;
+@{
+    Layout = "~/Layouts/_MainLayout.cshtml";
+    Page.Title = "LogIn";
+
+    FormsAuthentication.SignOut();
+    Response.Redirect("~/index.cshtml");
+}
+
+<br />
+<br />
+<a href="~/index.cshtml" class="link_button">
+    Back
+</a>

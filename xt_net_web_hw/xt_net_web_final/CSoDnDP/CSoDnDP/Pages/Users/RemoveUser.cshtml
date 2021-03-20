@@ -1,0 +1,21 @@
+﻿@using CSoDnDP.Model;
+@{
+    Layout = null;
+
+    int id = -1;
+    if (int.TryParse(Request["id"], out id))
+    {
+       LogicKeeper.Logic.User.RemoveUser(id);
+       Response.Redirect("~/Pages/UsersList.cshtml");
+    }
+    
+}
+
+Incorrect ID!
+<br />
+<br />
+<a href="~/Pages/UsersList.cshtml" class="link_button">
+    Back
+</a>
+
+

@@ -1,0 +1,49 @@
+﻿@using CSoDnDP.Entities.Interfaces;
+@using CSoDnDP.Model;
+@{
+    Layout = "~/Layouts/_AuthLayout.cshtml";
+    Page.Title = "Users";
+
+    IUser[] users_list = LogicKeeper.Logic.User.GetAllUser().ToArray();
+}
+
+<link href="~/Content/ListStyles.css" rel="stylesheet" />
+@if (User.IsInRole("Admin"))
+{
+    @:DataBase contain
+    @users_list.Length
+    @:users:
+    <br />
+    foreach (IUser user in users_list)
+    {
+        <div class="list_inline_record">
+            - @user.ID) @user.Login
+        </div>
+
+        if (user.Role == "User")
+        {
+            <a href="~/Pages/Users/UpdateRole.cshtml?id=@user.ID&role=admin" class="list_link_button">
+                make admin
+            </a>
+        }
+        else
+        {
+            <a href="~/Pages/Users/UpdateRole.cshtml?id=@user.ID&role=user" class="list_link_button">
+                make user
+            </a>
+        }
+        <a href="~/Pages/Users/RemoveUser.cshtml?id=@user.ID" class="list_link_button">
+            remove
+        </a>
+        <br />
+    }
+}
+else
+{
+     @:Sorry, you must be admin before look page!
+}
+<br />
+<br />
+<a href="~/index.cshtml" class="link_button">
+    Back
+</a>

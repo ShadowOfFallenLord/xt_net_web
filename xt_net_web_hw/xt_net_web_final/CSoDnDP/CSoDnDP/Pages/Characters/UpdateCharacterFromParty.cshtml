@@ -1,0 +1,1711 @@
+﻿@using CSoDnDP.Model;
+@using CSoDnDP.Entities.Interfaces;
+@using CSoDnDP.Entities.Implementation;
+@using System.Xml.Linq;
+@{
+    Layout = "~/Layouts/_AuthLayout.cshtml";
+    Page.Title = "Control System of Dungeon and Dragons Parties";
+
+    string party_id = Request["pid"];
+
+    int char_id = -1;
+    if (!int.TryParse(Request["id"], out char_id))
+    {
+        Response.Redirect($"~/Pages/Parties/LookParty.cshtml?id={party_id}");
+    }
+
+    XElement States = null;
+    XElement Info = null;
+    XElement Magick = null;
+    XElement Equipment = null;
+
+    ICharacter character = LogicKeeper.Logic.Character.GetCharacterByID(char_id);
+    character.ParseXML();
+
+    if (IsPost)
+    {
+        string Name = Request["Name"];
+        string StatesStr = Request.Unvalidated().Form["States"];
+        string InfoStr = Request.Unvalidated().Form["Info"];
+        string MagickStr = Request.Unvalidated().Form["Magick"];
+        string EquipmentStr = Request.Unvalidated().Form["Equipment"];
+
+        States = XElement.Parse(StatesStr);
+        Info = XElement.Parse(InfoStr);
+        Magick = XElement.Parse(MagickStr);
+        Equipment = XElement.Parse(EquipmentStr);
+
+        LogicKeeper.Logic.Character.UpdateChar(character.ID, Name, Info, States, Magick, Equipment);
+    }
+}
+
+<link href="~/Content/LookCharacterStyles.css" rel="stylesheet" />
+<link href="~/Content/ControlElementsStyles.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+
+<form action="~/Pages/Characters/UpdateCharacterFromParty.cshtml?id=@char_id&pid=@party_id" method="post" id="form_of_page">
+    <div class="main_character_container">
+        <div class="container_block"></div>
+        <div class="inner_character_container">
+            States & Skills
+            @{
+                Dictionary<string, List<string>> states_with_skills = new Dictionary<string, List<string>>();
+
+                states_with_skills.Add("Strength", new List<string>() {
+                    "SavingThrow",
+                    "Athletic" });
+
+                states_with_skills.Add("Dexterity", new List<string>() {
+                    "SavingThrow",
+                    "Acrobatic",
+                    "Sleight_of_Hand",
+                    "Stealth" });
+
+                states_with_skills.Add("Constitution", new List<string>() {
+                    "SavingThrow" });
+
+                states_with_skills.Add("Intelligence", new List<string>() {
+                    "SavingThrow",
+                    "Investigation",
+                    "History",
+                    "Arcana",
+                    "Nature",
+                    "Religion" });
+
+                states_with_skills.Add("Wisdom", new List<string>() {
+                    "SavingThrow",
+                    "Perception",
+                    "Survival",
+                    "Medicine",
+                    "Insight",
+                    "Animal_Handling" });
+
+                states_with_skills.Add("Charisma", new List<string>() {
+                    "SavingThrow",
+                    "Performance",
+                    "Intimidation",
+                    "Deception",
+                    "Persuasion" });
+            }
+
+            <script>
+                var level_modificator = @character.Info.LevelMod;
+            </script>
+
+            @foreach (var state_var in states_with_skills)
+            {
+                XElement current_xml = character.StatesXML.Element("States").Element(state_var.Key);
+
+                int state_val = int.Parse(current_xml.Element("Value").Value);
+                int state_bonus = int.Parse(current_xml.Element("Bonus").Value);
+                int state_mod = (state_val - 10 + state_bonus) / 2;
+
+                string state_lower = state_var.Key.ToLower();
+                string state_value_string = state_lower + "_value";
+                string state_mod_string = state_lower + "_mod";
+                string state_bonus_string = state_lower + "_bonus";
+
+                string jquery_state_value_string = "#" + state_value_string;
+                string jquery_state_mod_string = "#" + state_mod_string;
+                string jquery_state_bonus_string = "#" + state_bonus_string;
+
+                <script>
+                    var @(state_var.Key)_skills_updators = [];
+                </script>
+
+                <div class="text_block">
+                    @state_var.Key:
+                    <input class="numeric_input_field" type="number" id="@state_value_string" min="1" value="@state_val" />
+                    (<input class="numeric_input_field input_display_style" type="text" id="@state_mod_string" readonly value="@state_mod" />)
+                    <div class="inner_text_block">
+                        Bonus:
+                        <input class="numeric_input_field" type="number" id="@state_bonus_string" value="@state_bonus" />
+
+                        <div class="inner_text_block">
+                            @foreach (string skill_var in state_var.Value)
+                            {
+                                XElement skill_xml = current_xml.Element("Skills").Element(skill_var);
+
+                                bool skill_mastery = skill_xml.Element("Mastery").Value == "true";
+                                int skill_bonus = int.Parse(skill_xml.Element("Bonus").Value);
+
+                                int skill_val = state_mod + skill_bonus;
+                                if (skill_mastery)
+                                {
+                                    skill_val += character.Info.LevelMod;
+                                }
+
+                                string skill_lower = skill_var.Replace(" ", "_").ToLower();
+                                string skill_mastery_string = state_lower + "_" + skill_lower + "_mastery";
+                                string skill_value_string = state_lower + "_" + skill_lower + "_value";
+                                string skill_bonus_string = state_lower + "_" + skill_lower + "_bonus";
+
+                                string jquery_skill_mastery_string = "#" + skill_mastery_string;
+                                string jquery_skill_value_string = "#" + skill_value_string;
+                                string jquery_skill_bonus_string = "#" + skill_bonus_string;
+
+                                @skill_var @: :
+                                <input type="checkbox" id="@skill_mastery_string" checked="@skill_mastery" />
+                                <input class="numeric_input_field input_display_style" type="text" id="@skill_value_string" readonly value="@skill_val" />
+                                <div class="inner_text_block">
+                                    Bonus:
+                                    <input class="numeric_input_field" type="number" id="@skill_bonus_string" value="@skill_bonus" />
+                                </div>
+                                <script>
+                                    function @(skill_var)_events_init()
+                                    {
+                                        var $state_mod = $('@jquery_state_mod_string');
+                                        var $skill_mastery = $('@jquery_skill_mastery_string');
+                                        var $skill_bonus = $('@jquery_skill_bonus_string');
+                                        var $skill_val = $('@jquery_skill_value_string');
+
+                                        var skill_bonus_last_val = @skill_bonus;
+
+                                        function @(skill_var)_val_update()
+                                        {
+                                            var res_skill_val = skill_bonus_last_val + ($state_mod.val() - 0);
+                                            if ($skill_mastery.prop('checked'))
+                                            {
+                                                res_skill_val += level_modificator;
+                                            }
+                                            $skill_val.val(res_skill_val);
+                                        }
+
+                                        @(state_var.Key)_skills_updators[@(state_var.Key)_skills_updators.length] = @(skill_var)_val_update;
+
+                                        $skill_bonus.on('input', () =>
+                                        {
+                                            var in_str = $skill_bonus.val();
+                                            if (in_str == "")
+                                            {
+                                                $skill_bonus.val(skill_bonus_last_val);
+                                                return
+                                            }
+
+                                            skill_bonus_last_val = in_str - 0;
+                                            @(skill_var)_val_update();
+                                        });
+
+                                        $skill_mastery.on('input', () =>
+                                        {
+                                            @(skill_var)_val_update();
+                                        });
+                                    }
+                                    @(skill_var)_events_init();
+                                </script>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    function @(state_var.Key)_events_init()
+                    {
+                        var $state_val = $('@jquery_state_value_string');
+                        var $state_bonus = $('@jquery_state_bonus_string');
+                        var $state_mod = $('@jquery_state_mod_string');
+
+                        var state_val_last_val = 10;
+                        var state_bonus_last_val = 0;
+
+                        function state_values_update()
+                        {
+                            var mod_val = (state_val_last_val + state_bonus_last_val - 10) / 2.0;
+                            mod_val = Math.floor(mod_val);
+                            $state_mod.val(mod_val);
+
+                            for (var i = 0; i < @(state_var.Key)_skills_updators.length; i++)
+                            {
+                                @(state_var.Key)_skills_updators[i]();
+                            }
+                        }
+
+                        $state_val.on('input', () =>
+                        {
+                            var in_str = $state_val.val();
+                            if (in_str == "")
+                            {
+                                $state_val.val(state_val_last_val);
+                                return
+                            }
+
+                            state_val_last_val = in_str - 0;
+                            state_values_update();
+                        });
+
+                        $state_bonus.on('input', () =>
+                        {
+                            var in_str = $state_bonus.val();
+                            if (in_str == "")
+                            {
+                                $state_bonus.val(state_bonus_last_val);
+                                return
+                            }
+
+                            state_bonus_last_val = in_str - 0;
+                            state_values_update();
+                        });
+                    }
+
+                    @(state_var.Key)_events_init();
+                </script>
+            }
+            <div class="text_block">
+                Languages:
+                <ul id="lang_list">
+                    @foreach (string lang in character.States.Languages)
+                    {
+                        <li onclick="this.remove()">@lang</li>
+                    }
+                </ul>
+                <input type="text" id="lang_text_box" />
+                <input type="button" id="lang_add_button" value="Add lang" class="button_style" />
+                <script>
+                    var $lang_list = $('#lang_list');
+                    var $lang_add_btn = $('#lang_add_button');
+                    var $lang_text_box = $('#lang_text_box');
+                    $lang_text_box.val('');
+
+                    $lang_text_box.on('input', function ()
+                    {
+                        var text = $lang_text_box.val();
+                        if (text.length < 1)
+                        {
+                            $lang_add_btn.prop('disabled', true);
+                            return;
+                        }
+
+                        $lang_add_btn.prop('disabled', false);
+                    });
+
+                    $lang_add_btn.click(function ()
+                    {
+                        var text = $lang_text_box.val();
+                        var break_adding = false;
+
+                        $lang_list.find('li').each((i, elem) =>
+                        {
+                            if ($(elem).text() == text)
+                            {
+                                alert('Language has already');
+                                break_adding = true;
+                                return;
+                            }
+                        });
+
+                        if (break_adding) return;
+
+                        var new_lang = $('<li>' + text + '</li>');
+                        new_lang.click(() => { new_lang.remove(); });
+                        $lang_list.append(new_lang);
+                        $lang_text_box.val('');
+                        $lang_add_btn.prop('disabled', true);
+                    });
+                    $lang_add_btn.prop('disabled', true);
+                </script>
+            </div>
+            <div class="text_block">
+                Proficiencies:
+                <ul id="prof_list">
+                    @foreach (string prof in character.States.Proficiencies)
+                    {
+                        <li onclick="this.remove()">@prof</li>
+                    }
+                </ul>
+                <input type="text" id="prof_text_box" />
+                <input type="button" id="prof_add_button" value="Add prof" class="button_style" />
+                <script>
+                    var $prof_list = $('#prof_list');
+                    var $prof_add_btn = $('#prof_add_button');
+                    var $prof_text_box = $('#prof_text_box');
+                    $prof_text_box.val('');
+
+                    function check_prof_input()
+                    {
+                        var text = $prof_text_box.val();
+                        if (text.length < 1)
+                        {
+                            $prof_add_btn.prop('disabled', true);
+                            return;
+                        }
+
+                        $prof_add_btn.prop('disabled', false);
+                    }
+
+                    $prof_text_box.on('input', check_prof_input);
+
+                    function add_prof_func()
+                    {
+                        var text = $prof_text_box.val();
+                        var break_adding = false;
+
+                        $prof_list.find('li').each((i, elem) =>
+                        {
+                            if ($(elem).text() == text)
+                            {
+                                alert('Proficiency has already');
+                                break_adding = true;
+                                return;
+                            }
+                        });
+
+                        if (break_adding) return;
+
+                        var new_prof = $('<li>' + text + '</li>');
+                        new_prof.click(() => { new_prof.remove(); });
+                        $prof_list.append(new_prof);
+                        $prof_text_box.val('');
+                        $prof_add_btn.prop('disabled', true);
+                    }
+
+                    $prof_add_btn.click(add_prof_func);
+                    $prof_add_btn.prop('disabled', true);
+                </script>
+            </div>
+        </div>
+        <div class="inner_character_container">
+            Info
+            <div class=" text_block">
+                ID: ?
+                <br />
+                Name:
+                <input type="text" id="character_name_input" value="@character.Name" />
+                <script>
+                    $char_name_field = $('#character_name_input');
+                    $char_name_field.on('blur', () =>
+                    {
+                        var in_str = $char_name_field.val();
+                        if (in_str == "")
+                        {
+                            $char_name_field.val('CharName');
+                            return
+                        }
+                    });
+                </script>
+                <br />
+                Player: @character.PlayerName
+                <br />
+            </div>
+            <br />
+            <div class=" text_block">
+                Alignment:
+                <select id="character_alignment">
+                    <option>Chaotic Good</option>
+                    <option>Chaotic Neutral</option>
+                    <option>Chaotic Evil</option>
+                    <option>Neutral Good</option>
+                    <option>True Neutral</option>
+                    <option>Neutral Evil</option>
+                    <option>Lawfull Good</option>
+                    <option>Lawfull Neutral</option>
+                    <option>Lawfull Evil</option>
+                </select>
+                <br />
+                Background:
+                <input type="text" id="character_background_input" value="@character.Info.Background" />
+                <script>
+                    $char_background_field = $('#character_background_input');
+                    $char_background_field.on('blur', () =>
+                    {
+                        var in_str = $char_background_field.val();
+                        if (in_str == "")
+                        {
+                            $char_background_field.val('CharBack');
+                            return
+                        }
+                    });
+                </script>
+                <br />
+            </div>
+            <div class="text_block">
+                Race:
+                <input type="text" id="character_race_input" value="@character.Info.Race" />
+                <script>
+                    $char_race_field = $('#character_race_input');
+                    $char_race_field.on('blur', () =>
+                    {
+                        var in_str = $char_race_field.val();
+                        if (in_str == "")
+                        {
+                            $char_race_field.val('Human');
+                            return
+                        }
+                    });
+                </script>
+            </div>
+            <div class=" text_block">
+                Class:
+                <ul id="char_class_list">
+                    @foreach (var t in character.Info.Classes)
+                    {
+                        <li onclick="this.remove()">
+                            <div class="class_name" style="display:inline">
+                                @t.Key
+                            </div>
+                            <div class="class_level" style="display:inline">
+                                @t.Value
+                            </div>
+                        </li>
+                    }
+                </ul>
+                <input type="text" id="char_class_name_input" value="Warrior" />
+                <input class="numeric_input_field" type="number" id="char_class_level_input" value="1" min="1" />
+                <input type="button" id="char_class_add_button" value="Add class" class="button_style" />
+                <script>
+                    var $char_list = $('#char_class_list');
+                    var $class_name_box = $('#char_class_name_input');
+                    var $class_level_box = $('#char_class_level_input');
+                    var $class_add_btn = $('#char_class_add_button');
+
+                    $class_name_box.on('input', function ()
+                    {
+                        var text = $class_name_box.val();
+                        if (text.length < 1)
+                        {
+                            $class_add_btn.prop('disabled', true);
+                            return;
+                        }
+
+                        $class_add_btn.prop('disabled', false);
+                    });
+
+                    $class_level_box.on('input', function ()
+                    {
+                        var text = $class_level_box.val();
+                        if (text.length < 1)
+                        {
+                            $class_add_btn.prop('disabled', true);
+                            return;
+                        }
+
+                        $class_add_btn.prop('disabled', false);
+                    });
+
+                    $class_add_btn.click(function ()
+                    {
+                        var name = $class_name_box.val();
+                        var level = $class_level_box.val();
+                        var break_adding = false;
+
+                        $char_list.find('li').each((i, elem) =>
+                        {
+                            if ($(elem).find('.class_name').text() == name)
+                            {
+                                alert('Class has already');
+                                break_adding = true;
+                                return;
+                            }
+                        });
+
+                        if (break_adding) return;
+
+                        var new_class = $('<li>' +
+                            '<div class="class_name" style="display:inline">' +
+                            name +
+                            '</div>' +
+                            '<div class="class_level" style="display:inline"> ' +
+                            level +
+                            '</div></li>');
+                        new_class.click(() => { new_class.remove(); });
+                        $char_list.append(new_class);
+                        $class_add_btn.prop('disabled', true);
+                    });
+                </script>
+            </div>
+            <div class=" text_block">
+                Exp:
+                <input class="numeric_input_field" type="number" id="char_exp_field" min="0" value="@character.Info.Exp" />
+                <script>
+                    $('#char_exp_field').on('input', () =>
+                    {
+                        $elem = $('#char_exp_field');
+                        var in_str = $elem.val();
+                        if (in_str == "")
+                        {
+                            $elem.val(0);
+                            return
+                        }
+                    });
+                </script>
+            </div>
+            <div class=" text_block">
+                HP:
+                <input class="numeric_input_field" type="number" id="char_hp_field" min="0" value="@character.Info.Hp" />
+                /
+                <input class="numeric_input_field" type="number" id="char_max_hp_field" min="0" value="@character.Info.MaxHp" />
+                <script>
+                    $('#char_hp_field').on('input', () =>
+                    {
+                        $elem = $('#char_hp_field');
+                        var in_str = $elem.val();
+                        if (in_str == "")
+                        {
+                            $elem.val(0);
+                            return
+                        }
+                    });
+
+                    $('#char_max_hp_field').on('input', () =>
+                    {
+                        $elem = $('#char_max_hp_field');
+                        var in_str = $elem.val();
+                        if (in_str == "")
+                        {
+                            $elem.val(0);
+                            return
+                        }
+                    });
+                </script>
+            </div>
+            <div class=" text_block">
+                Speed:
+                <input class="numeric_input_field" type="number" id="char_speed_field" min="0" value="@character.Info.Speed" />
+                <script>
+                    $('#char_speed_field').on('input', () =>
+                    {
+                        $elem = $('#char_speed_field');
+                        var in_str = $elem.val();
+                        if (in_str == "")
+                        {
+                            $elem.val(0);
+                            return
+                        }
+                    });
+                </script>
+            </div>
+            <br />
+            <div class=" text_block">
+                Traits:
+                <input type="text" id="char_traits_field" value="@character.Info.Traits" />
+            </div>
+            <div class=" text_block">
+                Ideals:
+                <input type="text" id="char_ideals_field" value="@character.Info.Ideals" />
+            </div>
+            <div class=" text_block">
+                Bonds:
+                <input type="text" id="char_bonds_field" value="@character.Info.Bonds" />
+            </div>
+            <div class=" text_block">
+                Flaws:
+                <input type="text" id="char_flaws_field" value="@character.Info.Flaws" />
+            </div>
+            <br />
+            <div class="text_block">
+                Features:
+                <ul id="char_features_list">
+                    @foreach (var t in character.Info.Features)
+                    {
+                        <li onclick="this.remove()">
+                            <div class="feature_name" style="display:inline">
+                                @t.Key
+                            </div>
+                            :
+                            <div class="feature_level" style="display:inline">
+                                @t.Value
+                            </div>
+                        </li>
+                    }
+                </ul>
+                <input type="text" id="char_features_name_field" value="FeatureName" />
+                :
+                <input type="text" id="char_features_val_field" value="FeatureDesc" />
+                <input type="button" id="char_features_add_button" value="Add Feature" class="button_style" />
+                <script>
+                    var $features_list = $('#char_features_list');
+                    var $features_name_box = $('#char_features_name_field');
+                    var $features_level_box = $('#char_features_val_field');
+                    var $features_add_btn = $('#char_features_add_button');
+
+                    $features_name_box.on('input', function ()
+                    {
+                        var text = $features_name_box.val();
+                        if (text.length < 1)
+                        {
+                            $features_add_btn.prop('disabled', true);
+                            return;
+                        }
+
+                        $features_add_btn.prop('disabled', false);
+                    });
+
+                    $features_level_box.on('input', function ()
+                    {
+                        var text = $features_level_box.val();
+                        if (text.length < 1)
+                        {
+                            $features_add_btn.prop('disabled', true);
+                            return;
+                        }
+
+                        $features_add_btn.prop('disabled', false);
+                    });
+
+                    $features_add_btn.click(function ()
+                    {
+                        var name = $features_name_box.val();
+                        var val = $features_level_box.val();
+                        var break_adding = false;
+
+                        $features_list.find('li').each((i, elem) =>
+                        {
+                            if ($(elem).find('.feature_name').text() == name)
+                            {
+                                alert('Feature has already');
+                                break_adding = true;
+                                return;
+                            }
+                        });
+
+                        if (break_adding) return;
+
+                        var new_feature = $('<li>' +
+                            '<div class="feature_name" style="display:inline">' +
+                            name +
+                            '</div>' +
+                            ':' +
+                            '<div class="feature_level" style="display:inline"> ' +
+                            val +
+                            '</div></li>');
+                        new_feature.click(() => { new_feature.remove(); });
+                        $features_list.append(new_feature);
+                        $features_add_btn.prop('disabled', true);
+                    });
+                    $features_add_btn.prop('disabled', true);
+                </script>
+            </div>
+            <div class="text_block">
+                Spells:
+                <div class="inner_text_block">
+                    Сantrips:
+                    <ul id="cantrips_list">
+                        @foreach (string spell in character.Magic.Spells[0])
+                        {
+                            <li onclick="this.remove()">@spell</li>
+                        }
+                    </ul>
+                    <input type="text" id="cantrip_text_box" />
+                    <input type="button" id="cantrip_add_button" value="Add cantrip" class="button_style" />
+                    <script>
+                        var $cantrip_list = $('#cantrips_list');
+                        var $cantrip_add_btn = $('#cantrip_add_button');
+                        var $cantrip_text_box = $('#cantrip_text_box');
+                        $cantrip_text_box.val('');
+
+                        $cantrip_text_box.on('input', function ()
+                        {
+                            var text = $cantrip_text_box.val();
+                            if (text.length < 1)
+                            {
+                                $cantrip_add_btn.prop('disabled', true);
+                                return;
+                            }
+
+                            $cantrip_add_btn.prop('disabled', false);
+                        });
+
+                        $cantrip_add_btn.click(function ()
+                        {
+                            var text = $cantrip_text_box.val();
+                            var break_adding = false;
+
+                            $cantrip_list.find('li').each((i, elem) =>
+                            {
+                                if ($(elem).text() == text)
+                                {
+                                    alert('Cantrip has already');
+                                    break_adding = true;
+                                    return;
+                                }
+                            });
+
+                            if (break_adding) return;
+
+                            var new_cantrip = $('<li>' + text + '</li>');
+                            new_cantrip.click(() => { new_cantrip.remove(); });
+                            $cantrip_list.append(new_cantrip);
+                            $cantrip_text_box.val('');
+                            $cantrip_add_btn.prop('disabled', true);
+                        });
+                        $cantrip_add_btn.prop('disabled', true);
+                    </script>
+                </div>
+                <div class="inner_text_block">
+                    @for (int spell_level = 1; spell_level <= 9; spell_level++)
+                    {
+                        string spell_level_spells_cells = "spells_" + spell_level + "_cells";
+                        string spell_level_list = "spells_" + spell_level + "_list";
+                        string spell_level_add_button = "spells_" + spell_level + "_add_button";
+                        string spell_level_text_box = "spells_" + spell_level + "_text_box";
+
+                        string jquery_spell_level_list = "#" + spell_level_list;
+                        string jquery_spell_level_add_button = "#" + spell_level_add_button;
+                        string jquery_spell_level_text_box = "#" + spell_level_text_box;
+
+                        @:Spells @spell_level level (
+                        <input class="numeric_input_field" type="number" id="@spell_level_spells_cells" min="0" value="@character.Magic.SpellCells[spell_level]" />
+                        @:spell cells):
+                        <ul id="@spell_level_list">
+                            @foreach (string spell in character.Magic.Spells[spell_level])
+                            {
+                                <li onclick="this.remove()">@spell</li>
+                            }
+                        </ul>
+                        <input type="text" id="@spell_level_text_box" />
+                        <input type="button" id="@spell_level_add_button" value="Add spell" class="button_style" />
+                        <br />
+                        <script>
+                            function init_@(spell_level)_spells()
+                            {
+                                var $spell_list = $('@jquery_spell_level_list');
+                                var $spell_add_btn = $('@jquery_spell_level_add_button');
+                                var $spell_text_box = $('@jquery_spell_level_text_box');
+                                $spell_text_box.val('');
+
+                                $spell_text_box.on('input', function ()
+                                {
+                                    var text = $spell_text_box.val();
+                                    if (text.length < 1)
+                                    {
+                                        $spell_add_btn.prop('disabled', true);
+                                        return;
+                                    }
+
+                                    $spell_add_btn.prop('disabled', false);
+                                });
+
+                                $spell_add_btn.click(function ()
+                                {
+                                    var text = $spell_text_box.val();
+                                    var break_adding = false;
+
+                                    $spell_list.find('li').each((i, elem) =>
+                                    {
+                                        if ($(elem).text() == text)
+                                        {
+                                            alert('Spell has already');
+                                            break_adding = true;
+                                            return;
+                                        }
+                                    });
+
+                                    if (break_adding) return;
+
+                                    var new_spell = $('<li>' + text + '</li>');
+                                    new_spell.click(() => { new_spell.remove(); });
+                                    $spell_list.append(new_spell);
+                                    $spell_text_box.val('');
+                                    $spell_add_btn.prop('disabled', true);
+                                });
+                                $spell_add_btn.prop('disabled', true);
+                            }
+                            init_@(spell_level)_spells();
+                        </script>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="inner_character_container">
+            Equipment:
+            <div class="text_block">
+                Weapons:
+                <ul id="weapons_list">
+                    @foreach (var t in character.Inventory.Weapons)
+                    {
+                        <li onclick="this.remove()">
+                            Name: <div class="weapon_name" style="display: inline-block">@t.Name</div><br>
+                            Type: <div class="weapon_type" style="display: inline-block">@t.Type</div><br>
+                            Modificator: <div class="weapon_mod" style="display: inline-block">@t.Modificator</div><br>
+                            Damage: <div class="weapon_damage" style="display: inline-block">@t.Damage</div><br>
+                            Properties: <div class="weapon_prop" style="display: inline-block">@t.Properties</div>
+                        </li>
+                    }
+                </ul>
+                Name: <input type="text" id="weapons_name_text_box" />
+                <br />
+                Type: <input type="text" id="weapons_type_text_box" />
+                <br />
+                Modificator: <input class="numeric_input_field" type="number" id="weapons_modificator_text_box" />
+                <br />
+                Damage: <input type="text" id="weapons_damage_text_box" />
+                <br />
+                Properties: <input type="text" id="weapons_properties_text_box" />
+                <br />
+                <input type="button" id="weapons_add_button" value="Add weapon" class="button_style" />
+                <br />
+                <script>
+                    var $weapon_list = $('#weapons_list');
+                    var $weapon_add_btn = $('#weapons_add_button');
+
+                    var $weapon_name_box = $('#weapons_name_text_box');
+                    var $weapon_type_box = $('#weapons_type_text_box');
+                    var $weapon_mod_box = $('#weapons_modificator_text_box');
+                    var $weapon_damage_box = $('#weapons_damage_text_box');
+                    var $weapon_prop_box = $('#weapons_properties_text_box');
+
+                    function weapon_events_init()
+                    {
+                        $weapon_name_box.val('');
+                        $weapon_type_box.val('');
+                        $weapon_mod_box.val('');
+                        $weapon_damage_box.val('');
+                        $weapon_prop_box.val('');
+
+                        var weapon_name_correct_value = false;
+                        var weapon_type_correct_value = false;
+                        var weapon_mod_correct_value = false;
+                        var weapon_damage_correct_value = false;
+
+                        function set_button_enable()
+                        {
+                            if (weapon_name_correct_value &&
+                                weapon_type_correct_value &&
+                                weapon_mod_correct_value &&
+                                weapon_damage_correct_value)
+                            {
+                                $weapon_add_btn.prop('disabled', false);
+                                return;
+                            }
+                            $weapon_add_btn.prop('disabled', true);
+                        }
+
+                        $weapon_name_box.on('input', function ()
+                        {
+                            var text = $weapon_name_box.val();
+                            if (text.length < 1)
+                            {
+                                weapon_name_correct_value = false;
+                            }
+                            else
+                            {
+                                weapon_name_correct_value = true;
+                            }
+
+                            set_button_enable()
+                        });
+
+                        $weapon_type_box.on('input', function ()
+                        {
+                            var text = $weapon_type_box.val();
+                            if (text.length < 1)
+                            {
+                                weapon_type_correct_value = false;
+                            }
+                            else
+                            {
+                                weapon_type_correct_value = true;
+                            }
+
+                            set_button_enable()
+                        });
+
+                        $weapon_mod_box.on('input', function ()
+                        {
+                            var text = $weapon_mod_box.val();
+                            if (text.length < 1)
+                            {
+                                weapon_mod_correct_value = false;
+                            }
+                            else
+                            {
+                                weapon_mod_correct_value = true;
+                            }
+
+                            set_button_enable()
+                        });
+
+                        $weapon_damage_box.on('input', function ()
+                        {
+                            var text = $weapon_damage_box.val();
+                            if (text.length < 1)
+                            {
+                                weapon_damage_correct_value = false;
+                            }
+                            else
+                            {
+                                weapon_damage_correct_value = true;
+                            }
+
+                            set_button_enable()
+                        });
+
+                        $weapon_add_btn.click(function ()
+                        {
+                            var name = $weapon_name_box.val();
+                            var type = $weapon_type_box.val();
+                            var mod = $weapon_mod_box.val();
+                            var damage = $weapon_damage_box.val();
+                            var prop = $weapon_prop_box.val();
+
+                            var text =
+                                'Name: <div class="weapon_name" style="display: inline-block">' + name + '</div><br>' +
+                                'Type: <div class="weapon_type" style="display: inline-block">' + type + '</div><br>' +
+                                'Modificator: <div class="weapon_mod" style="display: inline-block">' + mod + '</div><br>' +
+                                'Damage: <div class="weapon_damage" style="display: inline-block">' + damage + '</div><br>' +
+                                'Properties: <div class="weapon_prop" style="display: inline-block">' + prop + '</div>';
+
+                            var new_weapon = $('<li>' + text + '</li>');
+                            new_weapon.click(() => { new_weapon.remove(); });
+                            $weapon_list.append(new_weapon);
+                        });
+                        $weapon_add_btn.prop('disabled', true);
+                    }
+                    weapon_events_init();
+                </script>
+                Armors:
+                <ul id="armors_list">
+                    @foreach (var t in character.Inventory.Armors)
+                    {
+                        <li onclick="this.remove()">
+                            Name: <div class="armor_name" style="display: inline-block">@t.Name</div><br>
+                            Type: <div class="armor_type" style="display: inline-block">@t.Type</div><br>
+                            ArmorClass: <div class="armor_ac" style="display: inline-block">@t.ArmorClass</div><br>
+                            Properties: <div class="armor_prop" style="display: inline-block">@t.Properties</div>
+                        </li>
+                    }
+                </ul>
+                Name: <input type="text" id="armors_name_text_box" />
+                <br />
+                Type: <input type="text" id="armors_type_text_box" />
+                <br />
+                ArmorClass: <input class="numeric_input_field" type="number" id="armors_ac_text_box" />
+                <br />
+                Properties: <input type="text" id="armors_properties_text_box" />
+                <br />
+                <input type="button" id="armors_add_button" value="Add armor" class="button_style" />
+                <br />
+                <script>
+                    var $armor_list = $('#armors_list');
+                    var $armor_add_btn = $('#armors_add_button');
+
+                    var $armor_name_box = $('#armors_name_text_box');
+                    var $armor_type_box = $('#armors_type_text_box');
+                    var $armor_ac_box = $('#armors_ac_text_box');
+                    var $armor_prop_box = $('#armors_properties_text_box');
+
+                    function armor_events_init()
+                    {
+                        $armor_name_box.val('');
+                        $armor_type_box.val('');
+                        $armor_ac_box.val('');
+                        $armor_prop_box.val('');
+
+                        var armor_name_correct_value = false;
+                        var armor_type_correct_value = false;
+                        var armor_ac_correct_value = false;
+
+                        function set_button_enable()
+                        {
+                            if (armor_name_correct_value &&
+                                armor_type_correct_value &&
+                                armor_ac_correct_value)
+                            {
+                                $armor_add_btn.prop('disabled', false);
+                                return;
+                            }
+                            $armor_add_btn.prop('disabled', true);
+                        }
+
+                        $armor_name_box.on('input', function ()
+                        {
+                            var text = $armor_name_box.val();
+                            if (text.length < 1)
+                            {
+                                armor_name_correct_value = false;
+                            }
+                            else
+                            {
+                                armor_name_correct_value = true;
+                            }
+
+                            set_button_enable()
+                        });
+
+                        $armor_type_box.on('input', function ()
+                        {
+                            var text = $armor_type_box.val();
+                            if (text.length < 1)
+                            {
+                                armor_type_correct_value = false;
+                            }
+                            else
+                            {
+                                armor_type_correct_value = true;
+                            }
+
+                            set_button_enable()
+                        });
+
+                        $armor_ac_box.on('input', function ()
+                        {
+                            var text = $armor_ac_box.val();
+                            if (text.length < 1)
+                            {
+                                armor_ac_correct_value = false;
+                            }
+                            else
+                            {
+                                armor_ac_correct_value = true;
+                            }
+
+                            set_button_enable()
+                        });
+
+                        $armor_add_btn.click(function ()
+                        {
+                            var name = $armor_name_box.val();
+                            var type = $armor_type_box.val();
+                            var ac = $armor_ac_box.val();
+                            var prop = $armor_prop_box.val();
+
+                            var text =
+                                'Name: <div class="armor_name" style="display: inline-block">' + name + '</div><br>' +
+                                'Type: <div class="armor_type" style="display: inline-block">' + type + '</div><br>' +
+                                'ArmorClass: <div class="armor_ac" style="display: inline-block">' + ac + '</div><br>' +
+                                'Properties: <div class="armor_prop" style="display: inline-block">' + prop + '</div>';
+
+                            var new_armor = $('<li>' + text + '</li>');
+                            new_armor.click(() => { new_armor.remove(); });
+                            $armor_list.append(new_armor);
+                        });
+                        $armor_add_btn.prop('disabled', true);
+                    }
+                    armor_events_init();
+                </script>
+                Items:
+                <ul id="items_list">
+                    @foreach (var t in character.Inventory.Items)
+                    {
+                        <li onclick="this.remove()">
+                            Name: <div class="item_name" style="display: inline-block">@t.Name</div><br>
+                            Description: <div class="item_desc" style="display: inline-block">@t.Description</div>
+                        </li>
+                    }
+                </ul>
+                Name: <input type="text" id="items_name_text_box" />
+                <br />
+                Description: <input type="text" id="items_description_text_box" />
+                <br />
+                <input type="button" id="items_add_button" value="Add item" class="button_style" />
+                <br />
+                <script>
+                    var $item_list = $('#items_list');
+                    var $item_add_btn = $('#items_add_button');
+
+                    var $item_name_box = $('#items_name_text_box');
+                    var $item_desc_box = $('#items_description_text_box');
+
+                    function item_events_init()
+                    {
+                        $item_name_box.val('');
+                        $item_desc_box.val('');
+
+                        var item_name_correct_value = false;
+                        var item_desc_correct_value = false;
+
+                        function set_button_enable()
+                        {
+                            if (item_name_correct_value &&
+                                item_desc_correct_value)
+                            {
+                                $item_add_btn.prop('disabled', false);
+                                return;
+                            }
+                            $item_add_btn.prop('disabled', true);
+                        }
+
+                        $item_name_box.on('input', function ()
+                        {
+                            var text = $item_name_box.val();
+                            if (text.length < 1)
+                            {
+                                item_name_correct_value = false;
+                            }
+                            else
+                            {
+                                item_name_correct_value = true;
+                            }
+
+                            set_button_enable()
+                        });
+
+                        $item_desc_box.on('input', function ()
+                        {
+                            var text = $item_desc_box.val();
+                            if (text.length < 1)
+                            {
+                                item_desc_correct_value = false;
+                            }
+                            else
+                            {
+                                item_desc_correct_value = true;
+                            }
+
+                            set_button_enable()
+                        });
+
+                        $item_add_btn.click(function ()
+                        {
+                            var name = $item_name_box.val();
+                            var desc = $item_desc_box.val();
+
+                            var text =
+                                'Name: <div class="item_name" style="display: inline-block">' + name + '</div><br>' +
+                                'Description: <div class="item_desc" style="display: inline-block">' + desc + '</div>';
+                            var new_item = $('<li>' + text + '</li>');
+                            new_item.click(() => { new_item.remove(); });
+                            $item_list.append(new_item);
+                        });
+                        $item_add_btn.prop('disabled', true);
+                    }
+                    item_events_init();
+                </script>
+                Money:
+                <div class="inner_text_block">
+                    Copper: <input class="numeric_input_field" type="number" id="copper_money" min="0" value="@character.Inventory.CopperMoney" />
+                </div>
+                <div class="inner_text_block">
+                    Silver: <input class="numeric_input_field" type="number" id="silver_money" min="0" value="@character.Inventory.SilverMoney" />
+                </div>
+                <div class="inner_text_block">
+                    Electrum: <input class="numeric_input_field" type="number" id="electrum_money" min="0" value="@character.Inventory.ElectrumMoney" />
+                </div>
+                <div class="inner_text_block">
+                    Gold: <input class="numeric_input_field" type="number" id="gold_money" min="0" value="@character.Inventory.GoldMoney" />
+                </div>
+                <div class="inner_text_block">
+                    Platinum: <input class="numeric_input_field" type="number" id="platinum_money" min="0" value="@character.Inventory.PlatinumMoney" />
+                </div>
+                <script>
+                    $('#copper_money').on('blur', () =>
+                    {
+                        var $inp = $('#copper_money');
+                        if ($inp.val() == "")
+                        {
+                            $inp.val(0);
+                        }
+                    });
+
+                    $('#silver_money').on('blur', () =>
+                    {
+                        var $inp = $('#silver_money');
+                        if ($inp.val() == "")
+                        {
+                            $inp.val(0);
+                        }
+                    });
+
+                    $('#electrum_money').on('blur', () =>
+                    {
+                        var $inp = $('#electrum_money');
+                        if ($inp.val() == "")
+                        {
+                            $inp.val(0);
+                        }
+                    });
+
+                    $('#gold_money').on('blur', () =>
+                    {
+                        var $inp = $('#gold_money');
+                        if ($inp.val() == "")
+                        {
+                            $inp.val(0);
+                        }
+                    });
+
+                    $('#platinum_money').on('blur', () =>
+                    {
+                        var $inp = $('#platinum_money');
+                        if ($inp.val() == "")
+                        {
+                            $inp.val(0);
+                        }
+                    });
+                </script>
+            </div>
+        </div>
+        <div class="container_block"></div>
+    </div>
+    <input type="button" id="add_char_btn" value="Update character" class="button_style" />
+    <script>
+        function generate_states_xml()
+        {
+            function create_states_object()
+            {
+                var res = {
+                    States: [
+                        @foreach(var state_var in states_with_skills)
+                        {
+                            string state_lower = state_var.Key.ToLower();
+
+                            string jquery_state_value_string = "#" + state_lower + "_value";
+                            string jquery_state_bonus_string = "#" + state_lower + "_bonus";
+
+                            @:{
+                                @:Name: '@state_var.Key',
+                                @:Value: $('@jquery_state_value_string').val() - 0,
+                                @:Bonus: $('@jquery_state_bonus_string').val() - 0,
+                                @:Skills: [
+                                foreach (string skill_var in state_var.Value)
+                                {
+                                    string skill_lower = skill_var.Replace(" ", "_").ToLower();
+
+                                    string jquery_skill_mastery_string = "#" + state_lower + "_" + skill_lower + "_mastery";
+                                    string jquery_skill_bonus_string = "#" + state_lower + "_" + skill_lower + "_bonus";
+
+                                    @:{
+                                        @:Name: '@skill_var',
+                                        @:Mastery: $('@jquery_skill_mastery_string').prop('checked'),
+                                        @:Bonus: $('@jquery_skill_bonus_string').val() - 0
+                                    @:},
+                                }
+                                @:]
+                            @:},
+                        }
+                    ],
+                    Languages: [],
+                    Proficiencies: [],
+                };
+
+                $lang_list.find('li').each((i, elem) =>
+                {
+                    res.Languages[res.Languages.length] = $(elem).text();
+                });
+
+                $prof_list.find('li').each((i, elem) =>
+                {
+                    res.Proficiencies[res.Proficiencies.length] = $(elem).text();
+                });
+
+                return res;
+            }
+
+            var states_obj = create_states_object();
+
+            function create_states_xml()
+            {
+                var states_xml = '<CharacterStates>';
+                states_xml += '<States>';
+                for (var state_index = 0; state_index < states_obj.States.length; state_index++)
+                {
+                    var current_state = states_obj.States[state_index];
+                    states_xml += '<' + current_state.Name + '>';
+
+                    states_xml += '<Value>';
+                    states_xml += current_state.Value;
+                    states_xml += '</Value>';
+
+                    states_xml += '<Bonus>';
+                    states_xml += current_state.Bonus;
+                    states_xml += '</Bonus>';
+
+                    states_xml += '<Skills>';
+                    for (var skill_index = 0; skill_index < current_state.Skills.length; skill_index++)
+                    {
+                        var current_skill = current_state.Skills[skill_index];
+                        states_xml += '<' + current_skill.Name + '>';
+
+                        states_xml += '<Mastery>';
+                        states_xml += current_skill.Mastery;
+                        states_xml += '</Mastery>';
+
+                        states_xml += '<Bonus>';
+                        states_xml += current_skill.Bonus;
+                        states_xml += '</Bonus>';
+
+                        states_xml += '</' + current_skill.Name + '>';
+                    }
+                    states_xml += '</Skills>';
+
+                    states_xml += '</' + current_state.Name + '>';
+                }
+                states_xml += '</States>';
+                states_xml += '<Languages>';
+                for (var i = 0; i < states_obj.Languages.length; i++)
+                {
+                    states_xml += '<Language>' + states_obj.Languages[i] + '</Language>';
+                }
+                states_xml += '</Languages>';
+                states_xml += '<Proficiencies>';
+                for (var i = 0; i < states_obj.Proficiencies.length; i++)
+                {
+                    states_xml += '<Proficiency>' + states_obj.Proficiencies[i] + '</Proficiency>';
+                }
+                states_xml += '</Proficiencies>';
+                states_xml += '</CharacterStates>';
+
+                return states_xml;
+            }
+
+            return create_states_xml();
+        }
+
+        function generate_info_xml()
+        {
+            function create_info_object()
+            {
+                var res = {
+                    Alignment: $('#character_alignment :selected').val(),
+                    Background: $('#character_background_input').val(),
+                    Race: $('#character_race_input').val(),
+                    Classes: [
+                    ],
+                    Exp: $('#char_exp_field').val() - 0,
+                    Hp: $('#char_hp_field').val() - 0,
+                    MaxHP: $('#char_max_hp_field').val() - 0,
+                    Speed: $('#char_speed_field').val() - 0,
+                    Traits: $('#char_traits_field').val(),
+                    Ideals: $('#char_ideals_field').val(),
+                    Bonds: $('#char_bonds_field').val(),
+                    Flaws: $('#char_flaws_field').val(),
+                    Features: [
+                    ],
+                };
+
+                $char_list.find('li').each((i, elem) =>
+                {
+                    res.Classes[res.Classes.length] = {
+                        Name: $(elem).find('.class_name').text(),
+                        Level: $(elem).find('.class_level').text(),
+                    }
+                });
+
+                $features_list.find('li').each((i, elem) =>
+                {
+                    res.Features[res.Features.length] = {
+                        Name: $(elem).find('.feature_name').text(),
+                        Description: $(elem).find('.feature_level').text(),
+                    }
+                });
+
+                return res;
+            }
+
+            var info_obj = create_info_object();
+
+            function create_info_xml()
+            {
+                var info_xml = '<Info>';
+
+                info_xml += '<Race>';
+                info_xml += info_obj.Race;
+                info_xml += '</Race>';
+
+                info_xml += '<Classes>';
+                for (var i = 0; i < info_obj.Classes.length; i++)
+                {
+                    info_xml += '<Class>';
+                        info_xml += '<Name>';
+                            info_xml += info_obj.Classes[i].Name;
+                        info_xml += '</Name>';
+                        info_xml += '<Level>';
+                            info_xml += info_obj.Classes[i].Level;
+                        info_xml += '</Level>';
+                    info_xml += '</Class>';
+                }
+                info_xml += '</Classes>';
+
+                info_xml += '<Alignment>';
+                info_xml += info_obj.Alignment;
+                info_xml += '</Alignment>';
+
+                info_xml += '<Background>';
+                info_xml += info_obj.Background;
+                info_xml += '</Background>';
+
+                info_xml += '<Exp>';
+                info_xml += info_obj.Exp;
+                info_xml += '</Exp>';
+
+                info_xml += '<Hp>';
+                info_xml += info_obj.Hp;
+                info_xml += '</Hp>';
+
+                info_xml += '<MaxHP>';
+                info_xml += info_obj.MaxHP;
+                info_xml += '</MaxHP>';
+
+                info_xml += '<Speed>';
+                info_xml += info_obj.Speed;
+                info_xml += '</Speed>';
+
+                info_xml += '<Traits>';
+                info_xml += info_obj.Traits;
+                info_xml += '</Traits>';
+
+                info_xml += '<Ideals>';
+                info_xml += info_obj.Ideals;
+                info_xml += '</Ideals>';
+
+                info_xml += '<Bonds>';
+                info_xml += info_obj.Bonds;
+                info_xml += '</Bonds>';
+
+                info_xml += '<Flaws>';
+                info_xml += info_obj.Flaws;
+                info_xml += '</Flaws>';
+
+                info_xml += '<Features>';
+                for (var i = 0; i < info_obj.Features.length; i++)
+                {
+                    info_xml += '<Feature>';
+                        info_xml += '<Name>';
+                            info_xml += info_obj.Features[i].Name;
+                        info_xml += '</Name>';
+                        info_xml += '<Description>';
+                            info_xml += info_obj.Features[i].Description;
+                        info_xml += '</Description>';
+                    info_xml += '</Feature>';
+                }
+                info_xml += '</Features>';
+
+                info_xml += '</Info>'
+
+                return info_xml;
+            }
+
+            return create_info_xml();
+        }
+
+        function generate_magic_xml()
+        {
+            function create_magic_object()
+            {
+                var res = {
+                    Сantrips: [],
+                    Spells: []
+                };
+
+                $cantrip_list.find('li').each((i, elem) =>
+                {
+                    res.Сantrips[res.Сantrips.length] = $(elem).text();
+                });
+
+                @for(int spell_level = 1; spell_level <= 9; spell_level++)
+                {
+
+                   string spell_level_spells_cells = "#" + "spells_" + spell_level + "_cells";
+                   string spell_level_list = "#" + "spells_" + spell_level + "_list";
+
+                    @:res.Spells[res.Spells.length] = {
+                    @:    Name: 'Spells_@(spell_level)',
+                    @:    SpellCells: $('@("#spells_" + spell_level + "_cells")').val() - 0,
+                    @:    Spells: []
+                    @:};
+                    @:
+                    @:$('#spells_@(spell_level)_list').find('li').each((i, elem) => {
+                    @:    res.Spells[res.Spells.length - 1].Spells[res.Spells[res.Spells.length - 1].Spells.length] = $(elem).text();
+                    @:});
+                }
+
+                return res;
+            }
+
+            var magic_obj = create_magic_object();
+
+            function create_magic_xml()
+            {
+                var magic_xml = '<Magick>';
+
+                magic_xml += '<Сantrips>';
+                for (var i = 0; i < magic_obj.Сantrips.length; i++)
+                {
+                    magic_xml += '<Spell>';
+                    magic_xml += magic_obj.Сantrips[i];
+                    magic_xml += '</Spell>';
+                }
+                magic_xml += '</Сantrips>';
+                magic_xml += '<Spells>';
+                for (var i = 0; i < magic_obj.Spells.length; i++)
+                {
+                    magic_xml += '<' + magic_obj.Spells[i].Name + '>';
+                        magic_xml += '<SpellCells>';
+                        magic_xml += magic_obj.Spells[i].SpellCells;
+                        magic_xml += '</SpellCells>';
+
+                    for (var spell_i = 0; spell_i < magic_obj.Spells[i].Spells.length; spell_i++)
+                    {
+                        magic_xml += '<Spell>';
+                        magic_xml += magic_obj.Spells[i].Spells[spell_i];
+                        magic_xml += '</Spell>';
+                    }
+                    magic_xml += '</' + magic_obj.Spells[i].Name + '>';
+                }
+                magic_xml += '</Spells>';
+                magic_xml += '</Magick>';
+                return magic_xml;
+            }
+
+            return create_magic_xml();
+        }
+
+        function generate_equipment_xml()
+        {
+            function create_equipment_object()
+            {
+                var res = {
+                    Equipment: {
+                        Weapon: [],
+                        Armor: [],
+                        Item: []
+                    },
+                    Money: {
+                        Copper: $('#copper_money').val() - 0,
+                        Silver: $('#silver_money').val() - 0,
+                        Electrum: $('#electrum_money').val() - 0,
+                        Gold: $('#gold_money').val() - 0,
+                        Platinum: $('#platinum_money').val() - 0,
+                    }
+                };
+
+                $('#weapons_list').find('li').each((i, elem) =>
+                {
+                    var $e = $(elem)
+                    res.Equipment.Weapon[res.Equipment.Weapon.length] = {
+                        Name: $e.find('.weapon_name').text(),
+                        Type: $e.find('.weapon_type').text(),
+                        Modificator: $e.find('.weapon_mod').text() - 0,
+                        Damage: $e.find('.weapon_damage').text(),
+                        Properties: $e.find('.weapon_prop').text(),
+                    };
+                });
+
+                $('#armors_list').find('li').each((i, elem) =>
+                {
+                    var $e = $(elem)
+                    res.Equipment.Armor[res.Equipment.Armor.length] = {
+                        Name: $e.find('.armor_name').text(),
+                        Type: $e.find('.armor_type').text(),
+                        ArmorClass: $e.find('.armor_ac').text() - 0,
+                        Properties: $e.find('.armor_prop').text(),
+                    };
+                });
+
+                $('#items_list').find('li').each((i, elem) =>
+                {
+                    var $e = $(elem)
+                    res.Equipment.Item[res.Equipment.Item.length] = {
+                        Name: $e.find('.item_name').text(),
+                        Description: $e.find('.item_desc').text(),
+                    };
+                });
+
+                return res;
+            }
+
+            var equipment_obj = create_equipment_object();
+
+            function create_equipment_xml()
+            {
+                var equipment_xml = '<Inventory>';
+                equipment_xml += '<Equipment>';
+                for (var i = 0; i < equipment_obj.Equipment.Weapon.length; i++)
+                {
+                    equipment_xml += '<Weapon>';
+                        equipment_xml += '<Name>';
+                            equipment_xml += equipment_obj.Equipment.Weapon[i].Name;
+                        equipment_xml += '</Name>';
+                        equipment_xml += '<Type>';
+                            equipment_xml += equipment_obj.Equipment.Weapon[i].Type;
+                        equipment_xml += '</Type>';
+                        equipment_xml += '<Mod>';
+                            equipment_xml += equipment_obj.Equipment.Weapon[i].Modificator;
+                        equipment_xml += '</Mod>';
+                        equipment_xml += '<Damage>';
+                            equipment_xml += equipment_obj.Equipment.Weapon[i].Damage;
+                        equipment_xml += '</Damage>';
+                        equipment_xml += '<Properties>';
+                            equipment_xml += equipment_obj.Equipment.Weapon[i].Properties;
+                        equipment_xml += '</Properties>';
+                    equipment_xml += '</Weapon>';
+                }
+                for (var i = 0; i < equipment_obj.Equipment.Armor.length; i++)
+                {
+                    equipment_xml += '<Armor>';
+                        equipment_xml += '<Name>';
+                            equipment_xml += equipment_obj.Equipment.Armor[i].Name;
+                        equipment_xml += '</Name>';
+                        equipment_xml += '<Type>';
+                            equipment_xml += equipment_obj.Equipment.Armor[i].Type;
+                        equipment_xml += '</Type>';
+                        equipment_xml += '<AC>';
+                            equipment_xml += equipment_obj.Equipment.Armor[i].ArmorClass;
+                        equipment_xml += '</AC>';
+                        equipment_xml += '<Properties>';
+                            equipment_xml += equipment_obj.Equipment.Armor[i].Properties;
+                        equipment_xml += '</Properties>';
+                    equipment_xml += '</Armor>';
+                }
+                for (var i = 0; i < equipment_obj.Equipment.Item.length; i++)
+                {
+                    equipment_xml += '<Item>';
+                        equipment_xml += '<Name>';
+                            equipment_xml += equipment_obj.Equipment.Item[i].Name;
+                        equipment_xml += '</Name>';
+                        equipment_xml += '<Description>';
+                            equipment_xml += equipment_obj.Equipment.Item[i].Description;
+                        equipment_xml += '</Description>';
+                    equipment_xml += '</Item>';
+                }
+                equipment_xml += '</Equipment>';
+                    equipment_xml += '<Money>';
+                        equipment_xml += '<Copper>';
+                            equipment_xml += equipment_obj.Money.Copper;
+                        equipment_xml += '</Copper>';
+                        equipment_xml += '<Silver>';
+                            equipment_xml += equipment_obj.Money.Silver;
+                        equipment_xml += '</Silver>';
+                        equipment_xml += '<Electrum>';
+                            equipment_xml += equipment_obj.Money.Electrum;
+                        equipment_xml += '</Electrum>';
+                        equipment_xml += '<Gold>';
+                            equipment_xml += equipment_obj.Money.Gold;
+                        equipment_xml += '</Gold>';
+                        equipment_xml += '<Platinum>';
+                            equipment_xml += equipment_obj.Money.Platinum;
+                        equipment_xml += '</Platinum>';
+                    equipment_xml += '</Money>';
+                equipment_xml += '</Inventory>';
+
+                return equipment_xml;
+            }
+
+            return create_equipment_xml();
+        }
+
+        $('#add_char_btn').on('click', function ()
+        {
+            var $form = $('#form_of_page');
+
+            var states_xml = generate_states_xml();
+
+            var info_xml = generate_info_xml();
+
+            var magic_xml = generate_magic_xml();
+
+            var equipment_xml = generate_equipment_xml();
+
+            var $data = {};
+
+            $data['Name'] = $('#character_name_input').val();
+            $data['States'] = states_xml;
+            $data['Info'] = info_xml;
+            $data['Magick'] = magic_xml;
+            $data['Equipment'] = equipment_xml;
+
+            $.post({
+                url: $form.attr('action'),
+                type: 'post',
+                data: $data,
+                success: function (result)
+                {
+                    location.href = 'LookCharacterFromParty.cshtml?id=@char_id&pid=@party_id';
+                }
+            });
+        });
+    </script>
+</form>
+<br />
+<br />
+<a href="~/Pages/Characters/LookCharacterFromParty.cshtml?id=@char_id&pid=@party_id" class="link_button">
+    Back
+</a>

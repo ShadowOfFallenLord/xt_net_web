@@ -1,0 +1,22 @@
+﻿@using CSoDnDP.Model;
+@{
+    Layout = "~/Layouts/_AuthLayout.cshtml";
+    Page.Title = "Control System of Dungeon and Dragons Parties";
+
+    int id = -1;
+    if(int.TryParse(Request["id"], out id))
+    {
+        LogicKeeper.Logic.Party.RemoveParty(id);
+        Response.Redirect("~/Pages/PartiesList.cshtml");
+    }
+}
+
+Error!
+
+<br />
+<br />
+<a href="~/Pages/PartiesList.cshtml" class="link_button">
+    Back
+</a>
+
+

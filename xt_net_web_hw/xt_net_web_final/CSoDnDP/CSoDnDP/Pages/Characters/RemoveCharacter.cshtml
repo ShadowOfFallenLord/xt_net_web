@@ -1,0 +1,24 @@
+﻿@using CSoDnDP.Model;
+@using CSoDnDP.Entities.Interfaces;
+@{
+    Layout = "~/Layouts/_AuthLayout.cshtml";
+    Page.Title = "Control System of Dungeon and Dragons Parties";
+
+    string list_type = Request["clt"];
+    int id = -1;
+    string str_id = Request["id"];
+    if (int.TryParse(str_id, out id))
+    {
+        LogicKeeper.Logic.Character.RemoveChar(id);
+        Response.Redirect($"~/Pages/CharactersList.cshtml?clt={list_type}");
+    }
+}
+
+Error! "@str_id" is incorrect id!
+<br />
+<br />
+<a href="~/index.cshtml" class="link_button">
+    Back
+</a>
+
+

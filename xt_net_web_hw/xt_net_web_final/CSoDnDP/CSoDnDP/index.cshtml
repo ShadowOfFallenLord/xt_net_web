@@ -1,0 +1,24 @@
+﻿@{
+    Layout = "~/Layouts/_AuthLayout.cshtml";
+    Page.Title = "Control System of Dungeon and Dragons Parties";
+}
+
+
+<a href="~/Pages/PartiesList.cshtml" class="link_button"> 
+    Look parties
+</a>
+<br />
+<a href="~/Pages/CharactersList.cshtml?clt=my" class="link_button">
+    Look my characters
+</a>
+<br />
+<a href="~/Pages/CharactersList.cshtml?clt=all" class="link_button">
+    Look all characters
+</a>
+<br />
+@if (User.IsInRole("Admin"))
+{
+    <a href="~/Pages/UsersList.cshtml" class="link_button">
+        Look users
+    </a>
+}

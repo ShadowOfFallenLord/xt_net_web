@@ -1,0 +1,99 @@
+﻿@using CSoDnDP.Model;
+@using CSoDnDP.Entities.Interfaces.Parties;
+@{
+    Layout = "~/Layouts/_AuthLayout.cshtml";
+    Page.Title = "Control System of Dungeon and Dragons Parties";
+
+    bool is_error = false;
+    int id = -1;
+    if (!int.TryParse(Request["id"], out id))
+    {
+        is_error = true;
+    }
+
+    IParty party = null;
+    IPartyPlayer[] players = null;
+    if (!is_error)
+    {
+        party = LogicKeeper.Logic.Party.GetPartyByID(id);
+        players = LogicKeeper.Logic.Party.GetPlayers(id).ToArray();
+    }
+}
+
+@if (is_error)
+{
+    @:Incorrect ID!
+}
+else
+{
+    @:Party ID: @party.ID
+    <br />
+    @:Name: @party.Name
+    <br />
+    @:Master: @party.MasterName
+    <br />
+    @:State: @party.State
+    <br />
+    if (party.MasterName == User.Identity.Name || User.IsInRole("Admin"))
+    {
+        if ((int)party.State != 0)
+        {
+            <a href="~/Pages/Parties/SetPartyState.cshtml?id=@party.ID&state=0" class="link_button" style="width:175px">
+                Set "Recruitment" state
+            </a>
+            <br />
+        }
+        if ((int)party.State != 1)
+        {
+            <a href="~/Pages/Parties/SetPartyState.cshtml?id=@party.ID&state=1" class="link_button" style="width:175px">
+                Set "Preparation" state
+            </a>
+            <br />
+        }
+        if ((int)party.State != 2)
+        {
+            <a href="~/Pages/Parties/SetPartyState.cshtml?id=@party.ID&state=2" class="link_button" style="width:175px">
+                Set "In the process" state
+            </a>
+            <br />
+        }
+        if ((int)party.State != 3)
+        {
+            <a href="~/Pages/Parties/SetPartyState.cshtml?id=@party.ID&state=3" class="link_button" style="width:175px">
+                Set "Completed" state
+            </a>
+            <br />
+        }
+    }
+    <br />
+    if((players.Where(x => x.PlayerName == User.Identity.Name).Count() < 1) && party.State == CSoDnDP.Entities.Enums.PartyState.Recruitment)
+    {
+        <a href="~/Pages/Parties/AddPlayer.cshtml?pid=@id" class="link_button">
+            Add Player
+        </a>
+        <br />
+    }
+    @:Players:
+    foreach (IPartyPlayer player in players)
+    {
+        <br />
+        @:- "@player.CharName" from @player.PlayerName
+        <a href="~/Pages/Characters/LookCharacterFromParty.cshtml?id=@player.CharID&pid=@id" class="link_button">
+            (look)
+        </a>
+        if (party.MasterName == User.Identity.Name || User.IsInRole("Admin"))
+        {
+            <a href="~/Pages/Parties/RemovePlayer.cshtml?id=@player.CharID&pid=@id" class="link_button">
+                (remove)
+            </a>
+        }
+    }
+}
+
+<br />
+<br />
+<a href="~/Pages/PartiesList.cshtml" class="link_button">
+    Back
+</a>
+
+

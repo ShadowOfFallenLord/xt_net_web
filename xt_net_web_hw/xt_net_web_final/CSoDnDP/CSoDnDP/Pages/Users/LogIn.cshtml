@@ -1,0 +1,92 @@
+﻿@using CSoDnDP.Entities.Enums;
+@using CSoDnDP.Model;
+@{
+    Layout = "~/Layouts/_MainLayout.cshtml";
+    Page.Title = "LogIn";
+
+    string login = Request["login"];
+    string password = Request["password"];
+
+    bool is_error = false;
+    bool login_error = false;
+    bool password_error = false;
+
+    AuthResult result = 0;
+
+    if (IsPost)
+    {
+        if (login == null || login.Length < 1)
+        {
+            is_error = true;
+            login_error = true;
+        }
+
+        if (password == null || password.Length < 1)
+        {
+            is_error = true;
+            password_error = true;
+        }
+
+        if (!is_error)
+        {
+            result = LogicKeeper.Logic.User.CheckAuth(login, password);
+
+            if (result == AuthResult.Correct)
+            {
+                FormsAuthentication.SetAuthCookie(login, true);
+                Response.Redirect("~/index.cshtml");
+            }
+        }
+    }
+}
+
+@if (!IsPost)
+{
+    <form action="~/Pages/Users/LogIn.cshtml" method="post">
+        Login:
+        <br />
+        <input type="text" name="login" />
+        <br />
+        Password:
+        <br />
+        <input type="password" name="password" />
+        <br />
+        <input type="submit" value="LogIn" />
+    </form>
+}
+else
+{
+    if (is_error)
+    {
+        if (login_error)
+        {
+            @:"
+            @login
+            @: is not correct login!
+            <br />
+        }
+
+        if (password_error)
+        {
+            @:"
+            @password
+            @: is not correct password!
+            <br />
+        }
+    }
+
+    switch (result)
+    {
+        case AuthResult.LoginFail:
+            @:User not exist!
+            break;
+        case AuthResult.PasswordFail:
+            @:Invalid password!
+            break;
+    }
+}
+<br />
+<br />
+<a href="~/index.cshtml" class="link_button">
+    Back
+</a>

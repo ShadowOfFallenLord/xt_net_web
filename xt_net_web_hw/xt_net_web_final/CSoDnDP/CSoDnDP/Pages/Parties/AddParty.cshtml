@@ -1,0 +1,65 @@
+﻿@using CSoDnDP.Model;
+@using CSoDnDP.Entities.Interfaces;
+@using CSoDnDP.Entities.Interfaces.Parties;
+@{
+    Layout = "~/Layouts/_AuthLayout.cshtml";
+    Page.Title = "Control System of Dungeon and Dragons Parties";
+
+    int error_type = 0;
+    /*
+     * -1 - no errors
+     * 1 - incorrect name
+     * 2 - incorrect user
+     */
+    if (IsPost)
+    {
+        string name = Request["party_name"];
+
+        if (name == null)
+        {
+            error_type |= 1;
+        }
+
+        IUser user = LogicKeeper.Logic.User.GetUserInfo(User.Identity.Name);
+
+        if (user == null)
+        {
+            error_type |= 2;
+        }
+
+        if (error_type == 0)
+        {
+            LogicKeeper.Logic.Party.AddParty(name, user.ID);
+            Response.Redirect("~/Pages/PartiesList.cshtml");
+        }
+    }
+}
+
+@if (error_type != 0)
+{
+    @:Error!
+    <br />
+    if ((error_type & 1) != 0)
+    {
+        @:Party name can not be empty.
+        <br />
+    }
+    if ((error_type & 2) != 0)
+    {
+        @:User not found.
+        <br />
+    }
+}
+
+<form action="~/Pages/Parties/AddParty.cshtml" method="post">
+    <input type="text" name="party_name" />
+    <input type="submit" value="Add party" />
+</form>
+
+<br />
+<br />
+<a href="~/Pages/PartiesList.cshtml" class="link_button">
+    Back
+</a>
+
+

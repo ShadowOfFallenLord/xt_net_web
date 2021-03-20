@@ -1,0 +1,80 @@
+﻿@using CSoDnDP.Entities.Enums;
+@using CSoDnDP.Model;
+@{
+    Layout = "~/Layouts/_MainLayout.cshtml";
+    Page.Title = "Register";
+
+    string login = Request["login"];
+    string password = Request["password"];
+
+    bool is_error = false;
+    bool login_error = false;
+    bool password_error = false;
+
+    if (IsPost)
+    {
+        if (login == null || login.Length < 3)
+        {
+            is_error = true;
+            login_error = true;
+        }
+
+        if (password == null || password.Length < 3)
+        {
+            is_error = true;
+            password_error = true;
+        }
+
+        if (!is_error)
+        {
+            is_error = !LogicKeeper.Logic.User.AddUser(login, password);
+
+            if (!is_error)
+            {
+                FormsAuthentication.SetAuthCookie(login, true);
+                Response.Redirect("~/index.cshtml");
+            }
+        }
+    }
+}
+
+@if (!IsPost)
+{
+    <form action="~/Pages/Users/Register.cshtml" method="post">
+        Login:
+        <br />
+        <input type="text" name="login" />
+        <br />
+        Password:
+        <br />
+        <input type="password" name="password" />
+        <br />
+        <input type="submit" value="Register" />
+    </form>
+}
+else
+{
+    if (is_error)
+    {
+        if (login_error)
+        {
+            @:"
+            @login
+            @: is not correct login!
+            <br />
+        }
+
+        if (password_error)
+        {
+            @:"
+            @password
+            @: is not correct password!
+            <br />
+        }
+    }
+}
+<br />
+<br />
+<a href="~/index.cshtml" class="link_button">
+    Back
+</a>

@@ -1,0 +1,291 @@
+﻿@using CSoDnDP.Model;
+@using CSoDnDP.Entities.Interfaces;
+@using CSoDnDP.Entities.Implementation;
+@using System.Xml.Linq;
+@{
+    Layout = "~/Layouts/_AuthLayout.cshtml";
+    Page.Title = "Control System of Dungeon and Dragons Parties";
+
+    string list_type = Request["clt"];
+
+    bool is_error = false;
+    bool id_error = false;
+
+    int id = -1;
+    if (!int.TryParse(Request["id"], out id))
+    {
+        is_error = true;
+    }
+
+    ICharacter character = null;
+    bool parse_error = false;
+    if (!is_error)
+    {
+        character = LogicKeeper.Logic.Character.GetCharacterByID(id);
+
+        if (!character.ParseXML())
+        {
+            is_error = true;
+            parse_error = true;
+        }
+    }
+}
+
+@if (is_error)
+{
+    if (id_error)
+    {
+        @:Incorrect character ID!
+    }
+    if (parse_error)
+    {
+        @:Page can not parse character's info!
+    }
+    <br />
+    @:Go back and try again.
+}
+else
+{
+    if (character.PlayerName == User.Identity.Name || User.IsInRole("Admin"))
+    {
+        <a href="~/Pages/Characters/UpdateCharacterFromList.cshtml?id=@id&clt=@list_type" class="link_button">
+            Update
+        </a>
+        <br />
+        <br />
+    }
+    <link href="~/Content/LookCharacterStyles.css" rel="stylesheet" />
+    <div class="main_character_container">
+        <div class="container_block"></div>
+        <div class="inner_character_container">
+            States & Skills
+            @foreach (var t in character.States.States)
+            {
+                <div class="text_block">
+                    @t.Key:
+                    @t.Value.Value
+                    +
+                    @t.Value.Bonus
+                    (@t.Value.Modificator)
+                    <div class="inner_text_block">
+                        @foreach (var skill in t.Value.Skills)
+                        {
+                            @skill.Key@: :
+                            if (skill.Value.Mastery)
+                            {
+                                @:(+)
+                            }
+                            @skill.Value.Value
+                            @:(
+                            @skill.Value.Bonus
+                            @:)
+                            <br />
+                        }
+                    </div>
+                    <br />
+                </div>
+            }
+            <div class="text_block">
+                Languages:
+                <div class="inner_text_block">
+                    @foreach (var t in character.States.Languages)
+                    {
+                        @t
+                        <br />
+                    }
+                </div>
+                <br />
+            </div>
+            <div class="text_block">
+                Proficiencies:
+                <div class="inner_text_block">
+                    @foreach (var t in character.States.Proficiencies)
+                    {
+                        @t
+                        <br />
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="inner_character_container">
+            Info
+            <div class=" text_block">
+                ID: @character.ID
+                <br />
+                Name: @character.Name
+                <br />
+                Player: @character.PlayerName
+                <br />
+            </div>
+            <br />
+            <div class=" text_block">
+                Alignment: @character.Info.Alignment
+                <br />
+                Background: @character.Info.Background
+                <br />
+            </div>
+            <div class="text_block">
+                Race: @character.Info.Race
+            </div>
+            <div class=" text_block">
+                Class:
+                <div class="inner_text_block">
+                    @foreach (var t in character.Info.Classes)
+                    {
+                        @t.Key
+                        @: :
+                        @t.Value
+                        <br />
+                    }
+                </div>
+            </div>
+            <div class=" text_block">
+                Exp: @character.Info.Exp
+            </div>
+            <div class=" text_block">
+                HP: @character.Info.Hp / @character.Info.MaxHp
+            </div>
+            <div class=" text_block">
+                Speed: @character.Info.Speed
+            </div>
+            <br />
+            <div class=" text_block">
+                Traits:
+                <div class="inner_text_block">
+                    @character.Info.Traits
+                </div>
+            </div>
+            <div class=" text_block">
+                Ideals:
+                <div class="inner_text_block">
+                    @character.Info.Ideals
+                </div>
+            </div>
+            <div class=" text_block">
+                Bonds:
+                <div class="inner_text_block">
+                    @character.Info.Bonds
+                </div>
+            </div>
+            <div class=" text_block">
+                Flaws:
+                <div class="inner_text_block">
+                    @character.Info.Flaws
+                </div>
+            </div>
+            <br />
+            <div class="text_block">
+                Features:
+                <div class="inner_text_block">
+                    @foreach (var t in character.Info.Features)
+                    {
+                        @t.Key
+                        @: :
+                        @t.Value
+                        <br />
+                    }
+                </div>
+            </div>
+            <div class="text_block">
+                Spells:
+                <div class="inner_text_block">
+                    Сantrips:
+                    @foreach (string t in character.Magic.Spells[0])
+                    {
+                        <div class="inner_text_block">
+                            @t
+                        </div>
+                    }
+                </div>
+                <div class="inner_text_block">
+                    @foreach (int level in character.Magic.SpellCells.Keys)
+                    {
+                        @:Spells @level level (
+                        @character.Magic.SpellCells[level]
+                        @:spell cells ):
+                        <div class="inner_text_block">
+                            @foreach (string spell in character.Magic.Spells[level])
+                            {
+                                @spell
+                                <br />
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="inner_character_container">
+            Equipment:
+            <div class="text_block">
+                Weapons:
+                <div class="inner_text_block">
+                    @foreach (var t in character.Inventory.Weapons)
+                    {
+                        @:Name: @t.Name
+                        <br />
+                        @:Type: @t.Type
+                        <br />
+                        @:Modificator: @t.Modificator
+                        <br />
+                        @:Damage: @t.Damage
+                        <br />
+                        @:Properties: @t.Properties
+                        <br />
+                        <br />
+                    }
+                </div>
+                Armors:
+                <div class="inner_text_block">
+                    @foreach (var t in character.Inventory.Armors)
+                    {
+                        @:Name: @t.Name
+                        <br />
+                        @:Type: @t.Type
+                        <br />
+                        @:ArmorClass: @t.ArmorClass
+                        <br />
+                        @:Properties: @t.Properties
+                        <br />
+                        <br />
+                    }
+                </div>
+                Items:
+                <div class="inner_text_block">
+                    @foreach (var t in character.Inventory.Items)
+                    {
+                        @:Name: @t.Name
+                        <br />
+                        @:Description: @t.Description
+                        <br />
+                        <br />
+                    }
+                </div>
+                Money:
+                <div class="inner_text_block">
+                    Copper: @character.Inventory.CopperMoney
+                </div>
+                <div class="inner_text_block">
+                    Silver: @character.Inventory.SilverMoney
+                </div>
+                <div class="inner_text_block">
+                    Electrum: @character.Inventory.ElectrumMoney
+                </div>
+                <div class="inner_text_block">
+                    Gold: @character.Inventory.GoldMoney
+                </div>
+                <div class="inner_text_block">
+                    Platinum: @character.Inventory.PlatinumMoney
+                </div>
+
+            </div>
+        </div>
+        <div class="container_block"></div>
+    </div>
+}
+<br />
+<br />
+<a href="~/Pages/CharactersList.cshtml?clt=@list_type" class="link_button">
+    Back
+</a>
+
+

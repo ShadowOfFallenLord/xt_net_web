@@ -1,0 +1,26 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" type="text/css" href="~/Content/MainStyles.css" />
+    <title>@Page.Title</title>
+</head>
+<body>
+    <div class="main_container">
+        <h1 class="header_container">
+            Welcome in Control System of Dungeon and Dragons Parties!
+        </h1>
+        <div id="main_content_div_in_this_site">
+            @RenderBody()
+        </div>
+        <div class="creator_container">
+            Created by Petrov Alex, 2020.
+        </div>
+    </div>
+</body>
+</html>

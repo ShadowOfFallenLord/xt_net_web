@@ -1,0 +1,45 @@
+﻿.button_style
+{
+    background-color: darkgrey; 
+    border: 1px solid darkgrey;
+    border-radius: 5px;
+    color: black;
+    padding: 5px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.button_style:hover
+{
+    background-color: lightgray; 
+    border: 1px solid black;
+    border-radius: 5px;
+    color: darkred;
+    text-decoration: underline;
+}
+
+.button_style:disabled
+{
+    background-color: grey; 
+    border: 1px solid darkgrey;
+    color: darkgrey;
+}
+
+.button_style:disabled:hover
+{
+    background-color: grey; 
+    border: 1px solid darkgrey;
+    color: darkgrey;
+    text-decoration: none;
+}
+
+.input_display_style
+{
+    border: none; 
+    border-radius: 3px; 
+    background: #FAFAFA;
+    height: 22px;
+    width: 50px; 
+    color: black;
+}

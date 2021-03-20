@@ -1,0 +1,63 @@
+﻿@using CSoDnDP.Model;
+@using CSoDnDP.Entities.Interfaces;
+@using CSoDnDP.Entities.Interfaces.Parties;
+@{
+    Layout = "~/Layouts/_AuthLayout.cshtml";
+    Page.Title = "Control System of Dungeon and Dragons Parties";
+
+    bool is_error = false;
+    int party_id = -1;
+    if(!int.TryParse(Request["pid"], out party_id))
+    {
+        is_error = true;
+    }
+
+    if(IsPost)
+    {
+        string str_id = Request["char_name"];
+        int char_id = int.Parse(str_id);
+        IUser user = LogicKeeper.Logic.User.GetUserInfo(User.Identity.Name);
+        LogicKeeper.Logic.Party.AddPlayer(party_id, user.ID, char_id);
+        Response.Redirect($"~/Pages/Parties/LookParty.cshtml?id={party_id}");
+    }
+
+    ICharacter[] characters = LogicKeeper.Logic.Character.GetPlayerCharacter(User.Identity.Name).ToArray();
+}
+
+@if(is_error)
+{
+    @:Error!
+}
+else
+{
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <form action="~/Pages/Parties/AddPlayer.cshtml?pid=@party_id" method="post">
+        <input type="number" style="display:none" name="char_name" id="char_name_input" />
+        <select id="char_list">
+        @foreach(ICharacter character in characters)
+        {
+            <option value="@character.ID">
+                @character.Name
+            </option>
+        }
+        </select>
+        <br />
+        <input type="submit" value="Add" />
+        <script>
+            var $data = $('#char_name_input');
+            $('#char_list').on('change', () =>
+            {
+                $data.val($("#char_list :selected").val());
+            });
+            $data.val($("#char_list :selected").val());
+        </script>
+    </form>
+}
+
+<br />
+<br />
+<a href="~/Pages/Parties/LookParty.cshtml?id=@party_id" class="link_button">
+    Back
+</a>
+
+

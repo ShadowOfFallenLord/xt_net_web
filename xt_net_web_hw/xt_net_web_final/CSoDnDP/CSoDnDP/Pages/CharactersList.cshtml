@@ -1,0 +1,88 @@
+﻿@using CSoDnDP.Model;
+@using CSoDnDP.Entities.Interfaces;
+@{
+    Layout = "~/Layouts/_AuthLayout.cshtml";
+    Page.Title = "Control System of Dungeon and Dragons Parties";
+
+    string list_type = Request["clt"];
+    int list_type_res = 0;
+
+    if (list_type == null)
+    {
+        list_type_res = 0;
+    }
+    else
+    {
+        switch (list_type)
+        {
+            case "my":
+                list_type_res = 1;
+                break;
+            case "all":
+                list_type_res = 2;
+                break;
+            default:
+                list_type_res = 0;
+                break;
+        }
+    }
+
+    IEnumerable<ICharacter> characters = null;
+
+    if (list_type_res != 0)
+    {
+        characters = LogicKeeper.Logic.Character.GetAllCharacter();
+
+        if (list_type_res == 1)
+        {
+            characters = characters.Where(x => x.PlayerName == User.Identity.Name);
+        }
+    }
+}
+<link href="~/Content/ListStyles.css" rel="stylesheet" />
+
+@if (list_type_res == 0)
+{
+    @:Incorrect list type!
+    <br />
+    @:Go back and try again.
+}
+else
+{
+    <a href="~/Pages/Characters/AddCharacter.cshtml" class="link_button">
+        Add character
+    </a>
+    <br />
+    <br />
+    @:DataBase contains
+    @characters.Count()
+    if (list_type_res == 1)
+    {
+        @:your
+    }
+    @:characters:
+    foreach (ICharacter character in characters)
+    {
+        <br />
+        <div class="list_inline_record">
+            - @character.ID) @character.Name
+        </div>
+        
+        <a href="~/Pages/Characters/LookCharacterFromList.cshtml?id=@character.ID&clt=@list_type" class="link_button">
+            (look)
+        </a>
+        if (character.PlayerName == User.Identity.Name)
+        {
+            <a href="~/Pages/Characters/RemoveCharacter.cshtml?id=@character.ID&clt=@list_type" class="link_button">
+                (remove)
+            </a>
+        }
+    }
+}
+<br />
+<br />
+<a href="~/index.cshtml" class="link_button">
+    Back
+</a>
+
+
